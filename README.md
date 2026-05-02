@@ -78,7 +78,11 @@ npm test
 
 ## Current Status
 
-GeoSight is an early but useful local starting point. The main calculation pipeline, controls, unit conversion, state export/import, and a first-pass Bislin-style visualization are in place. The next important work is improving runtime polish and parity with the reference calculator, especially the projection behavior, view-mode toggles, slider ergonomics, and expanded data panels.
+GeoSight is very much a work in progress. The main calculation pipeline, controls, unit conversion, state export/import, and a first-pass Bislin-style visualization are in place, but runtime behavior and UI polish still need focused work. The next important work is improving parity with the reference calculator, especially projection behavior, view-mode toggles, slider ergonomics, data-panel coverage, and general interaction stability.
+
+## License
+
+GeoSight is licensed under the GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`). See `LICENSE` for the full license text and `NOTICE` for attribution and third-party notices.
 
 ## Acknowledgement
 

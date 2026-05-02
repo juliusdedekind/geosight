@@ -1,0 +1,25 @@
+GeoSight
+Copyright (c) 2026 Julius Dedekind
+
+GeoSight is licensed under the GNU Affero General Public License version 3
+or later. See LICENSE for the full license text.
+
+This project is inspired by Walter Bislin's Advanced Earth Curvature
+Calculator:
+
+https://walter.bislins.ch/bloge/index.asp?page=Advanced+Earth+Curvature+Calculator
+
+Walter Bislin's original calculator and published source-code pages are used
+as reference material for understanding the feature set, equations, controls,
+and visualization behavior that GeoSight aims to study and reimplement in a
+modern TypeScript application.
+
+The repository includes a jsgx3d folder for reference while developing the
+visualization. In particular, jsgx3d/src/x.js contains its own notice:
+
+  x.js, X v3.15.4, Cross-Browser.com DHTML Library
+  Copyright (c) 2004 Michael Foster, Licensed LGPL (gnu.org)
+  heavily edited (c) 2005-2016 Walter Bislin, walter.bislins.ch
+
+Keep third-party copyright and license notices intact when redistributing this
+repository or derivative works.
