@@ -1,0 +1,291 @@
+:root {
+  color: #172033;
+  background: #f6f7f9;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 1px solid #a9b3c5;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #172033;
+  cursor: pointer;
+  min-height: 34px;
+  padding: 0 12px;
+}
+
+button:hover {
+  border-color: #3864a3;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100vh;
+}
+
+.scene-region {
+  border-bottom: 1px solid #d7dce5;
+  min-height: 68vh;
+}
+
+.control-region {
+  background: #ffffff;
+  border-left: 0;
+  height: auto;
+  overflow: visible;
+  padding: 18px 28px;
+}
+
+.app-header {
+  align-items: center;
+  border-bottom: 1px solid #e3e7ee;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+}
+
+.eyebrow {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 22px;
+  line-height: 1.15;
+  margin: 0;
+}
+
+h2 {
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+
+.panel {
+  border-bottom: 1px solid #e3e7ee;
+  padding: 14px 0;
+}
+
+.field {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(132px, 1fr) minmax(120px, 150px) minmax(42px, auto);
+  margin: 8px 0;
+}
+
+.field span {
+  color: #374151;
+  font-size: 13px;
+}
+
+.field input,
+.field select,
+textarea {
+  border: 1px solid #c7cfdb;
+  border-radius: 6px;
+  color: #111827;
+  min-height: 34px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+.field .field-slider {
+  grid-column: 2 / 4;
+  min-height: 20px;
+  padding: 0;
+}
+
+.field b {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.check-row {
+  align-items: center;
+  color: #374151;
+  display: flex;
+  font-size: 13px;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.data-panel {
+  display: grid;
+  gap: 6px;
+}
+
+.data-row {
+  align-items: baseline;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.data-row span {
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.data-row strong {
+  color: #111827;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+textarea {
+  font-family: "Cascadia Mono", "Consolas", monospace;
+  min-height: 150px;
+  resize: vertical;
+}
+
+.scene-wrap {
+  height: 100%;
+  min-height: 68vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.scene-wrap canvas,
+.curve-canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.scene-label {
+  align-items: baseline;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  left: 18px;
+  padding: 9px 12px;
+  position: absolute;
+  top: 18px;
+  z-index: 2;
+}
+
+.scene-label strong {
+  font-size: 14px;
+}
+
+.scene-label span {
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.scene-annotations {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.scene-note {
+  color: #0f172a;
+  font-size: clamp(13px, 1.45vw, 26px);
+  line-height: 1.28;
+  position: absolute;
+  text-align: left;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85),
+    1px 0 0 rgba(255, 255, 255, 0.85),
+    -1px 0 0 rgba(255, 255, 255, 0.85);
+}
+
+.scene-note p {
+  margin: 0 0 4px;
+}
+
+.scene-note .highlight {
+  background: rgba(255, 221, 255, 0.82);
+  display: inline-block;
+  padding: 1px 6px;
+}
+
+.scene-note .red {
+  color: #991b1b;
+}
+
+.note-object {
+  left: 28px;
+  top: 92px;
+}
+
+.note-horizon {
+  right: 32px;
+  text-align: right;
+  top: 35%;
+}
+
+.note-left-right {
+  bottom: 20%;
+  right: 28px;
+  text-align: right;
+}
+
+.note-refraction {
+  bottom: 20px;
+  left: 28px;
+}
+
+.panel {
+  max-width: 1180px;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .scene-region,
+  .scene-wrap {
+    min-height: 58vh;
+  }
+
+  .scene-note {
+    font-size: 12px;
+  }
+
+  .note-horizon {
+    top: 32%;
+  }
+
+  .note-left-right {
+    display: none;
+  }
+}

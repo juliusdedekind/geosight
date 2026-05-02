@@ -1,0 +1,3866 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="iso-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="robots" content="INDEX,FOLLOW">
+<meta name="generator" content="WaBis-Wiki 0.136: http://walter.bislins.ch/doku/wiki">
+<meta name="publisher" content="Walter Bislin: http://walter.bislins.ch">
+<meta name="description" content="This page shows the source code of the Advanced Earth Curvature Calculator which is stored in the private page Special: Advanced Curvature Calculator Code. This code is an extract of the Source Code: Curvature App, lived out the demos and most models, but added some computations and implemented variable units.">
+<meta name="keywords" content="Curvature">
+
+<title>Source Code: Advanced Earth Curvature Calculator</title>
+
+<script>
+var ROOT              = '../';
+var NUMBER_FORMATING  = 'en';
+var ASP_PAGE          = 'index.asp';
+var ASP_REF           = 'index.asp?page=Source+Code%3A+Advanced+Earth+Curvature+Calculator';
+var PAGE_NAME         = 'Source Code: Advanced Earth Curvature Calculator';
+var PAGE_URL          = 'index.asp?page=Source+Code%3A+Advanced+Earth+Curvature+Calculator';
+var MEDIA_FOLDER      = '../blog/media/';
+var WIKIDOC_URL       = '../wiki_doc/index.asp?page=PageName';
+var PAGE_MODE         = '';
+var MATH_PROCESSOR    = 'MathJax';
+var ENABLE_EDIT       = true;
+var HAS_FORMS         = false;
+var IS_LOGED_IN       = false;
+var IS_USER_LOGED_IN  = false;
+var WIKI_HiliWordList   = [  ];
+</script>
+
+<script src="../wiki_app/wiki.js?v=09-09-2023b"></script>
+
+
+<link rel="stylesheet" type="text/css" href="../wiki_app/css/styles.css?v=09-09-2023" media="all">
+<style>
+.Wiki div.CommentNoprint {  }
+.Wiki span.sep { color:#444; padding: 0 0.5em; }
+.Wiki div.AdminForm { margin-top: 1em; margin-bottom: 1em; }
+.Wiki div.BlogMenu { margin:-0.9em 0 0 0; border-bottom:1px solid #ccc;; }
+.Wiki div.BlogMenu div { margin:0; display:inline; padding:0.1em 0.5em; border-left:1px solid gray; }
+.Wiki div.BlogMenu div.first { border:none; }
+.Wiki div.BlogMenu div.selected { font-weight:bold; }
+.Wiki div.BlogHeader { margin:2em 0; }
+.Wiki div.BlogHeader h2 { border-bottom:none; margin:0.75em 0 0.25em 0; }
+.Wiki div.MoreLinks { margin-bottom:2em; }
+.Wiki div.MoreLinks h2 { border-top: 2px solid #ff6000; border-bottom:0; padding-top:1em; padding-bottom:1em; margin-bottom:0em; margin-top:2em; }
+.Wiki div.BlogSep { border-top:2px solid #ff6000; clear:both; margin-top:3em; margin-bottom:1em; }
+.Wiki div.CommentSep { border-top:1px solid #ccc; clear:both; margin:1.5em 0 0.5em 0; }
+.Wiki div.BlogDate { color:gray; margin:0 0 0.5em 0; font-size:10pt; }
+.Wiki div.BlogDate a { color:#1982d1; }
+.Wiki div.BlogDate a:hover { color:#ff6000; }
+.Wiki div.BlogCommentInfoBar { margin: 0 0 1em 0; padding:0; }
+.Wiki div.BlogFn { color:gray; float:right; margin:0 0 0.5em 0; font-size:10pt; line-height:1.3; }
+.Wiki div.BlogFn a { color:#1982d1; }
+.Wiki div.BlogFn a:hover { color:#ff6000; }
+.Wiki div.BlogInfos { color:gray; margin:0.5em 0 0.5em 0; font-size:10pt; line-height:1.3; }
+.Wiki div.CommentList div.BlogInfos { margin-top: 0; }
+.Wiki div.BlogInfos a { color:#1982d1; }
+.Wiki div.BlogInfos a:hover { color:#ff6000; }
+.Wiki div.BlogInfos span.CommentNum { border: 1px solid gray; padding: 0 4px 0 5px; font-weight:bold; background-color:gray; color: white; }
+.Wiki div.BlogInfos span.CommentName { border: 1px solid gray; padding: 0 5px; margin-right: 5px; font-weight:bold; background-color:white; white-space:nowrap; }
+.Wiki div.BlogInfos span.CommentDate { padding-right: 5px; }
+.Wiki div.BlogInfos span.CommentTime { padding-right: 5px; }
+.Wiki div.BlogInfos span.CommentDateSep { border-left: 1px solid gray; color:white; padding:0; margin-right:0px; }
+.Wiki table.BlogList { width:100%; line-height:1.5em; }
+.Wiki table.BlogList th { padding: 0.25em 0.5em; background:none; background-color:#ddd; border-top:1px solid #ccc; border-bottom:1px solid #ccc; }
+.Wiki table.BlogList td { padding: 0.25em 0.5em; border-bottom:1px solid #eee; }
+.Wiki table.BlogList td div.BlogInfos { color:gray; margin:0.25em 0 0.25em 0; font-size:10pt; line-height:1.3; }
+.Wiki table.BlogList td div.BlogInfos strong { color:#444; }
+.Wiki table.BlogList tr:first-child td { border-top:1px solid #ccc; }
+.Wiki table.BlogList tr:last-child td { border-bottom:1px solid #ccc; }
+.Wiki table.BlogList tr.AP { background-color: #efe; }
+.Wiki table.BlogList tr.AN { background-color: #efe; }
+.Wiki table.BlogList tr.AX { background-color: #fee; }
+.Wiki table.BlogList tr.AD { background-color: #fee; }
+.Wiki table.BlogList tr.CE { background-color: #ffd; }
+.Wiki table.BlogList tr.CD { background-color: #fdc; }
+.Wiki table.BlogList td.AP { background-color: #cfc; }
+.Wiki table.BlogList td.AN { background-color: #cfc; }
+.Wiki table.BlogList td.AX { background-color: #fcc; }
+.Wiki table.BlogList td.AD { background-color: #fcc; }
+.Wiki table.BlogList td.CE { background-color: #ff9; }
+.Wiki table.BlogList td.CD { background-color: #fca; }
+.Wiki table.DataFieldSet tr.Email { display:none; }
+.Wiki div.BlogTable { border:none; width:100%; line-height:1.3; margin: 0.3em 0; }
+.Wiki div.BlogTable div.LayoutStack4-Container { margin-top: 0; margin-bottom: 0; }
+.Wiki div.BlogTableCol p { white-space: nowrap; margin: 0 0.5em; line-height: 2em; }
+.Wiki div.PagedList { margin-top: 1.5em; }
+.Wiki div.PagedList div.Paragraph { margin: 0; }
+.Wiki div.PagedList table { margin:0; border:none; }
+.Wiki div.PagedList table.BlogList { border-top:1px solid gray; border-bottom:1px solid gray; }
+.Wiki div.PagedList div.ListNav { width:100%; line-height:33px; }
+.Wiki div.PagedList div.ListNav.top { border-top:1px solid #ddd; }
+.Wiki div.PagedList div.ListNav.bottom { border-bottom:1px solid #ddd; }
+.Wiki div.PagedList table.BlogList + div.ListNav { border-bottom:2px solid #ccc; border-top:none; }
+.Wiki div.PagedList div.ListNav div.Pos { font-size:10pt; color:gray; float:left; padding: 2px 0.5em 0 0.5em; }
+.Wiki div.PagedList div.ListNav div.Nav { font-weight:bold; float:right; padding: 0 3px; }
+.Wiki div.PagedList div.ListNav span.But { margin:0 0 0 8px; border:1px solid gray; color:gray; background-color:#EEE; font-weight:bold; cursor:pointer; padding-top:4px; padding-bottom:4px; }
+.Wiki div.PagedList div.ListNav span.But span { padding:0 12px; }
+.Wiki div.PagedList div.ListNav span.But a { padding:0 12px; }
+.Wiki div.PagedList div.ListNav span.But a:hover { text-decoration:none; }
+.Wiki div.PagedList div.ListNav span.Num { padding:4px 12px; margin:0 0 0 8px; border:1px solid gray; font-weight:bold; }
+.Wiki div.OpLegend { font-size:10pt; color:#aaa; padding:0 0.5em; text-align:right; margin-top:0.5em; }
+.Wiki div.CommentForm { margin-top:2em; clear:both; border-top: 2px solid #AAA; border-bottom: 1px solid #AAA; }
+.Wiki div.CommentForm td.Label { width: 5%; }
+.Wiki div.CommentForm td.Field { width: 95%; }
+.Wiki div.CommentList { clear:both; }
+.Wiki div.CommentList div.ruler { border-bottom:1px dashed #ccc; }
+.Wiki div.MoreBlog { text-align:left; margin-bottom:1em; font-style:italic; margin-top:1em; padding-right:0.2em; }
+.Wiki div.BlogImage { border:0px solid #ddd; padding:0px; line-height:0; margin-top:0em; }
+.Wiki div.BlogHomeImage { border:0px solid #ddd; padding:0px; line-height:0; margin-top:1em; }
+.Wiki div.BlogHomeImage img.BlogImageFrame { border:1px solid #ddd; }
+.Wiki div.CommentDescription { font-size:10pt; line-height:1.3em; margin: 1em 0; margin-left: -20px; }
+.Wiki div.CommentDescription li { margin-top: 0.3em; background-position-y:-1px; }
+.Wiki div.DisbaledLinkComment { background-color: #FED; }
+.Wiki div.InvisibleComment { background-color: #FEE; }
+.Wiki div.ErrorComment { background-color: #FDD; border:2px solid red; padding:0.5em; margin:0.5em 0; }
+.Wiki div.EditComment { border:2px solid green; padding:0.5em; margin:0.5em 0; }
+.Wiki div.HiddenBlog { border:2px solid #ddd; padding:0.5em; padding-bottom:1.5em; }
+</style>
+
+
+</head>
+<body id="body">
+
+<div class="page notEditMode limitWidth" id="Layout-Root">
+<div class="headerSection pageSection" id="Layout-HeaderSection">
+<div class="pageFrame" id="Layout-HeaderFrame">
+<div class="pageRow100">
+<div class="brandingCol" id="Layout-BrandingPart">
+<div class="branding" id="Layout-Branding">
+<h1><a href="http://walter.bislins.ch" title="Zur Homepage"><span>Wa</span>Bis</a></h1>
+<h2>walter.bislins.ch</h2>
+</div>
+</div>
+<div class="pagenavCol" id="Layout-NavigationPart">
+<ul class="pagenav">
+<li id="toNavigation"><a href="#Layout-SidebarPart">Zur Navigation</a></li>
+</ul>
+</div>
+<div class="searchformCol" id="Layout-SearchPart">
+<ul id="toNavigationPicto" class="pagenav">
+<li><a href="#Layout-SidebarPart">Navi</a></li>
+</ul>
+<form action="index.asp?op=search" method="get" class="searchform" accept-charset="iso-8859-1">
+<input type="hidden" name="op" value="search">
+<input type="hidden" name="page" value="Source Code: Advanced Earth Curvature Calculator">
+<label for="searchField" class="label">Suche</label>
+<input type="text" id="searchField" name="q" placeholder="Suche" accesskey="s" value="">
+<input type="submit" name="submit" class="Button" value="Suche">
+</form>
+</div>
+</div>
+</div>
+<div class="sitemenu" id="Layout-SiteMenubar">
+<div class="menubar">
+<?xml version="1.0" encoding="Windows-1252"?>
+<ul>
+<li><a href="../">Home</a></li>
+<li><a href="../blog/index.asp">Blog-De &dtrif;</a>
+  <ul>
+    <li><a href="../blog/index.asp">Neueste Artikel</a></li>
+    <li><a href="../blog/index.asp?blog=news">Neue Kommentare</a>
+    <li><a href="../blog/index.asp?page=Flat+Earth+Themen">Flat Earth Themen &rtrif;</a>
+      <ul>
+        <li><a href="../blog/index.asp?page=Flat%2DEarth%3A+Wie+stark+ist+die+Kr%FCmmung+der+Erde%3F">Wo ist die Krümmung?</a></li>
+        <li><a href="../blog/index.asp?page=K%F6nnen+wir+die+Abplattung+der+Erde+in+Satellitenbildern+sehen%3F">Abplattung der Erde</a></li>
+        <li><a href="../blog/index.asp?page=Das+Wahre+Gesicht+der+Erde%2C+Kameradistanz+spielt+eine+Rolle">Gesicht der Erde</a></li>
+        <li><a href="../blog/index.asp?page=Echtfarb%2DAufnahmen+der+Erde+vom+Satelliten+Himawari+der+JMA">Himawari 8</a></li>
+        <li><a href="../blog/index.asp?page=Zentrifugal%2D+und+Gravitationsbeschleunigung+in+einem+Flugzeug">Der Eötvös Effekt</a></li>
+      </ul>
+    </li>
+    <li><a href="../blog/index.asp?blog=list&tag=Aviatik">Aviatik &rtrif;</a>
+      <ul>
+        <li><a href="../blog/index.asp?page=Eine+Fluggeschwindigkeit%2C+verschiedene+Anzeigen">Fluggeschwindigkeiten</a></li>
+        <li><a href="../blog/index.asp?page=Rechner%3A+Umrechnen+von+Fluggeschwindigkeiten">Rechner: Fluggeschw.</a></li>
+        <li><a href="../blog/index.asp?page=Wie+bremst+ein+Verkehrsflugzeug+nach+der+Landung%3F">Wie bremst ein Flugzeug?</a></li>
+        <li><a href="../blog/index.asp?page=Kann+eine+Flugzeugt%FCr+im+Flug+ge%F6ffnet+werden%3F">Tür öffnen im Flug?</a></li>
+        <li><a href="../blog/index.asp?page=Schub+und+Gegenschub+eines+Turbofan%2DTriebwerks">Schub eines Triebwerks</a></li>
+        <li><a href="../blog/index.asp?page=Compressibility+Correction+Chart%2C+Verwendung+und+Berechnung">Compressibility Corr. Chart</a></li>
+        <li><a href="../blog/index.asp?page=Aviatik+Faustformel%3A+Sinkrate+auf+dem+Gleitpfad">Faustformel: Sinkflug</a></li>
+        <li><a href="../blog/index.asp?page=Berechnung%3A+Mittlere+Aerodynamische+Fl%FCgeltiefe+%28MAC%29">Berechnung MAC</a></li>
+      </ul>
+    </li>
+    <li><a href="../blog/index.asp?blog=list&tag=Mathematik">Mathematik</a></li>
+    <li><a href="../blog/index.asp?blog=list&tag=Physik">Physik</a></li>
+    <li><a href="../blog/index.asp?blog=list&tag=Programmierung">Programmierung</a></li>
+    <li><a href="../blog/index.asp?blog=list&tag=Computer">Computer</a></li>
+  </ul>
+</li>
+<li class="selected"><a href="../bloge/index.asp">Blog-En &dtrif;</a>
+  <ul>
+    <li><a href="../bloge/index.asp">Latest Articles</a></li>
+    <li><a href="../bloge/index.asp?blog=news">New Comments</a></li>
+    <li><a href="../bloge/index.asp?page=Knowledge+Database">Knowledge Database</a></li>
+    <li><a href="../bloge/index.asp?page=Flat+Earth+Topics">Top Flat Earth Topics &rtrif;</a>
+      <ul>
+        <li><a href="../bloge/index.asp?page=Proof+of+Earth+Curvature%3A+The+Rainy+Lake+Experiment">Rainy Lake Experiment</a></li>
+        <li><a href="../bloge/index.asp?page=Finding+the+curvature+of+the+Earth">Where is the Curve?</a></li>
+        <li><a href="../bloge/index.asp?page=Comparison+of+Globe+and+Flat%2DEarth+Model+Predictions+with+Reality">Predictions and Reality</a></li>
+        <li><a href="../bloge/index.asp?page=Gravity+and+how+the+Heliocentric+Model+works">Gravity &amp; Heliocentric Model</a></li>
+        <li><a href="../bloge/index.asp?page=Simulation+of+Atmospheric+Refraction">Refraction Simualtor</a></li>
+        <li><a href="../bloge/index.asp?page=Flat+Earth+Dome+Model">FE Dome Model</a></li>
+        <li><a href="../bloge/index.asp?page=Distances+on+Globe+and+Flat+Earth">Distances Globe &amp; FE</a></li>
+        <li><a href="../bloge/index.asp?page=Creating+Flight+Plans+for+Flat+Earth">Flight Plans for FE</a></li>
+        <li><a href="../bloge/index.asp?page=Creating+an+Equinox+Sundial+made+of+Paper">Equinox Sundial</a></li>
+      </ul>
+    </li>
+    <li><a href="../bloge/index.asp?page=Calculators%2C+Equations+and+other+Stuff">Calculators &rtrif;</a>
+      <ul>
+        <li><a href="../bloge/index.asp?page=Advanced+Earth+Curvature+Calculator">Earth Curve Calculator</a></li>
+        <li><a href="../bloge/index.asp?page=Calculators+and+Units+Converters">Untis &amp; other Calculators</a></li>
+        <li><a href="../bloge/index.asp?page=Distances+on+Globe+and+Flat+Earth">Distances Globe &amp; FE</a></li>
+        <li><a href="../bloge/index.asp?page=Earth+Gravity+Calculator">Gravity Calculator</a></li>
+        <li><a href="../bloge/index.asp?page=Rainy+Lake+Experiment%3A+WGS84+Calculator">WGS84 Calculator</a></li>
+        <li><a href="../bloge/index.asp?page=Centrifugal+and+Gravitational+Acceleration+in+an+Aircraft">Eötvös Effect</a></li>
+        <li><a href="../bloge/index.asp?page=Calculators%2C+Equations+and+other+Stuff">Calculators, Equations...</a></li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li><a href="../musik/index.asp">Musik &dtrif;</a>
+  <ul>
+    <li><a href="../musik/index.asp?page=Meine+Musik%2DVideos">Meine Musik Videos</a></li>
+    <li><a href="../musik/index.asp?page=Meine+CD%27s">Meine Musik CD's</a></li>
+    <li><a href="../musik/index.asp?page=Meine+Instrumente">Instrumente</a></li>
+    <li><a href="../musik/index.asp?page=Musikalische+Laufbahn">Musikalische Laufbahn</a></li>
+  </ul>
+</li>
+<li><a href="../wissen/index.asp">Wissen &dtrif;</a>
+  <ul>
+    <li><a href="../physik/index.asp">Mathe &amp; Physik</a></li>
+    <li><a href="../physik/index.asp?page=Struktur+der+physikalischen+Gesetze">Prinzip der kleinsten Wirkung</a></li>
+    <li><a href="../bloge/index.asp?page=Derivation+of+Special+Relativity+from+basic+observable+Principles">Special Relativity derived</a></li>
+    <li><a href="../physik/index.asp?page=Allgemeine+Relativit%E4tstheorie">Allg. Relativitätstheorie</a></li>
+    <li><a href="../aviatik/index.asp">Aviatik-Wiki</a></li>
+    <li><a href="../aviatik/index.asp?page=Grundlagen">Aviatik Grundlagen</a></li>
+    <li><a href="../fsim/index.asp">Flugsimulation</a></li>
+  </ul>
+</li>
+<li><a href="../projekte/index.asp">Projekte &dtrif;</a>
+  <ul>
+    <li><a href="../projekte/index.asp?page=Sudoku">Sudoku</a></li>
+    <li><a href="../projekte/index.asp?page=JavaScript%2DProjekte">JavaScripts &dtrif;</a>
+      <ul>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+Graph+%28JSG%29">Graph</a>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+3D%2DGraphX+%28JSGX3D%29">3D-GraphX</a>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+3D%2DGraph+%28JSG3D%29">3D-Graph</a>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+ControlPanel+%28CP%29">ControlPanel</a>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+Nullstellensuche+mit+Newton%2DVerfahren">Newton Solver</a>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+Async">Async</a>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+Sim">Sim</a>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+EarthMap">EarthMap</a>
+        <li><a href="../projekte/index.asp?page=JavaScripts%3A+Animator+%28ANIM%29">Animator</a>
+        <li><a href="../projekte/index.asp?page=Diverse+JavaScripts">Diverse</a>
+      </ul>
+    </li>
+    <li><a href="../projekte/index.asp?page=ASP%2DProjekte">ASP-Module</a></li>
+    <li><a href="../wiki_doc/index.asp">Wiki Doku</a></li>
+  </ul>
+</li>
+<li><a href="../gallery/index.asp">Galerien &dtrif;</a>
+  <ul>
+    <li><a href="../gallery/toepfer.asp">s'Töpferhüsli Watt</a></li>
+    <li><a href="../gallery/pfuedi.asp">Unsere Katze Pfüdi</a></li>
+    <li><a href="../gallery/index.asp?page=Ausbau+der+Scheune">Ausbau der Scheune</a></li>
+    <li><a href="../gallery/index.asp?page=Lithographien+Fredi+Br%E4ndli">Lithographien Fredi Brändli</a></li>
+  </ul>
+</li>
+<li><a href="../walti/index.asp">Persönliches &dtrif;</a>
+  <ul>
+    <li><a href="../walti/index.asp">Über mich</a></li>
+    <li><a href="../angst/index.asp">Angst &amp; Depression</a></li>
+    <li><a href="../work/index.asp?page=Medien%2C+die+extern+referenziert+werden" rel="nofollow">Public Media</a></li>
+    <li><a href="../work/index.asp" rel="nofollow">Arbeitsbereich</a></li>
+  </ul>
+</li>
+</ul>
+
+</div>
+</div>
+<div class="headertext" style="background: url(../blog/media/bgblog.jpg) repeat-x;" id="Layout-HeaderTextAndImage">
+<h2><a href="index.asp" title="Walter Bislin's Blog-En" style="color: #dbad89;">Walter Bislin's Blog-En</a></h2>
+</div>
+</div>
+<div class="contentSection pageSection" id="Layout-MainSection">
+<div class="pageFrame" id="Layout-MainFrame">
+<div class="pageRow100">
+<div id="SidebarOnOffButtons">
+<div id="SidebarOffButton" class="sidebarOnOffButton">
+<a href="javascript:LayoutMaximize()">&raquo;</a></div>
+<div id="SidebarOnButton" class="sidebarOnOffButton hide">
+<a href="javascript:LayoutNormal()">&laquo;</a></div>
+</div>
+<div id="FullscreenOnOffButtons">
+<div id="FullscreenOffButton" class="sidebarOnOffButton hide">
+<a href="javascript:LayoutFullscreenOff()">[&thinsp;&minus;&thinsp;]</a></div>
+<div id="FullscreenOnButton" class="sidebarOnOffButton">
+<a href="javascript:LayoutFullscreenOn()">[&thinsp;+&thinsp;]</a></div>
+</div>
+<div class="layoutCol75" id="Layout-ContentPart">
+
+<div id="WikiPage" class="WikiPage">
+
+<h1>Source Code: Advanced Earth Curvature Calculator</h1>
+
+<div id="Wiki" class="Wiki">
+
+<!-- wiki page starts here -->
+
+
+
+<script>
+
+function ShowBlogPage() {
+  xDisplay('PageContent','');
+  xDisplay('ShowContent','none');
+}
+</script>
+
+
+<p>
+This page shows the source code of the <a href="index.asp?page=Advanced+Earth+Curvature+Calculator">Advanced Earth Curvature Calculator</a> which is stored in the private page <a href="index.asp?page=Special%3A+Advanced+Curvature+Calculator+Code">Special: Advanced Curvature Calculator Code</a>. This code is an extract of the <a href="index.asp?page=Source+Code%3A+Curvature+App">Source Code: Curvature App</a>, lived out the demos and most models, but added some computations and implemented variable units.
+</p>
+
+<p>
+The description of the graphic module JsGraphX3D and the ControlPanels module can be found here:
+</p>
+
+<div class="WikiBigDir">
+<ul class="WikiList">
+<li><span class="lit"> <a href="../projekte/index.asp?page=JSGX3D%3A+Dokumentation" title="Prj:JSGX3D: Dokumentation">JSGX3D: Dokumentation</a></span></li>
+<li><span class="lit"> <a href="../projekte/index.asp?page=CP%3A+Dokumentation" title="Prj:CP: Dokumentation">CP: Dokumentation</a></span></li>
+</ul>
+
+</div>
+
+<pre class="code">
+#INCLUDE JsGraphX3D.inc
+#INCLUDE ControlPanel.inc
+#INCLUDE Tabs.inc
+#INCLUDE DataX.inc
+#INCLUDE TextControl.inc
+
+
+&lt;style&gt;
+textarea.ListingDisplay {
+  font-family: Courier;
+  margin-bottom: 1em;
+}
+#JsGraph1 { margin-top: 0.25em; }
+#ResetButton { margin-left: 1.2em; }
+#UnitsTab { margin-left: 1.2em; }
+#OptionsPanel { margin-top: 0; }
+#BasicsPanel { margin-bottom: 0; }
+#TargetDataPanel th { background: #dfd; }
+#HorizonDataPanel th { background: #ddf; }
+&lt;/style&gt;
+
+&lt;a id=&quot;App&quot;&gt;&lt;/a&gt;
+
+&lt;jscript&gt;
+
+var DefaultDigits = 6;
+var DeviceRatio_Off = 1.5;
+var PI90 = Math.PI / 2;
+
+function toRad( a ) { return a * Math.PI / 180; }
+function toDeg( a ) { return a * 180 / Math.PI; }
+
+// meta data for Json generation and loading
+
+var CurveAppMetaData = {
+  Compact: false,
+  DefaultPrec: 8,
+  Properties: [
+    { Name: 'DemoText',          Type: 'str',  Default: '' },
+    { Name: 'Description',       Type: 'str',  Default: '' },
+
+    { Name: 'Height',            Type: 'num',  Default: 2 },
+    { Name: 'FocalLengthField',  Type: 'num',  Default: 3000 },
+
+    { Name: 'ShowModel',         Type: 'int',  Default: 1 },
+    { Name: 'DeviceRatio',       Type: 'num',  Default: DeviceRatio_Off },
+    { Name: 'ViewcenterHorizon', Type: 'int',  Default: 0 },
+
+    { Name: 'ObjType',           Type: 'arr', Size: 2, ArrayType: 'int', Default: [ 0, 0 ] },
+    { Name: 'NObjects',          Type: 'arr', Size: 2, ArrayType: 'int', Default: [ 1, 0 ] },
+    { Name: 'ObjSurfDist',           Type: 'arr', Size: 2, ArrayType: 'num', Default: [ 12000, 20000 ] },
+    { Name: 'ObjDeltaDist',      Type: 'arr', Size: 2, ArrayType: 'num', Default: [ 300, 300 ] },
+    { Name: 'ObjSideType',       Type: 'arr', Size: 2, ArrayType: 'int', Default: [ 0, 0 ] },
+    { Name: 'ObjSidePos',        Type: 'arr', Size: 2, ArrayType: 'num', Default: [ 0, 0 ] },
+    { Name: 'ObjSideVar',        Type: 'arr', Size: 2, ArrayType: 'num', Default: [ 0, 0 ] },
+    { Name: 'ObjSizeType',       Type: 'arr', Size: 2, ArrayType: 'int', Default: [ 1, 1 ] },
+    { Name: 'ObjSize',           Type: 'arr', Size: 2, ArrayType: 'num', Default: [ 10, 10 ] },
+    { Name: 'ObjSizeVar',        Type: 'arr', Size: 2, ArrayType: 'num', Default: [ 0, 0 ] },
+
+    { Name: 'RefractionCoeff',   Type: 'num',  Default: 0 },
+    { Name: 'TemperatureGradient',Type:'num',  Default: -0.0065 },
+    { Name: 'RefractionSync',    Type: 'int',  Default: 0 },
+    { Name: 'Pressure_mbar',     Type: 'num',  Default: 1013.25 },
+    { Name: 'Temperature_C',     Type: 'num',  Default: 15 },
+    { Name: 'RefractionFactMin', Type: 'num',  Default: 0.5 },
+    { Name: 'RefractionFactMax', Type: 'num',  Default: 10000 },
+
+    { Name: 'RadiusEarth',       Type: 'num',  Default: 6371000 },
+    { Name: 'EquatorRadiusFE',   Type: 'num',  Default: 10007543 },
+    { Name: 'ShowTheodolite',    Type: 'bool', Default: false },
+    { Name: 'OverlayImage',      Type: 'str',  Default: '' },
+    { Name: 'OverlayImageAlpha', Type: 'num',  Default: 0.5 },
+
+    { Name: 'UnitsType',         Type: 'int',  Default: 0 },
+    { Name: 'Tilt',              Type: 'num',  Default: 0 },
+    { Name: 'Pan',               Type: 'num',  Default: 0 },
+
+    { Name: 'Flerspective',      Type: 'int',  Default: 0 },     // feature removed
+    { Name: 'RefDistance',       Type: 'num',  Default: 10000 }, // feature removed
+    { Name: 'ShowDataObject',    Type: 'bool', Default: true },
+    { Name: 'ShowDataRefraction',Type: 'bool', Default: true },
+    { Name: 'ShowDataHorizon',   Type: 'bool', Default: true },
+    { Name: 'ShowLftRghtDrop',   Type: 'bool', Default: false },
+  ],
+};
+
+
+// Curve App
+
+function CurveAppClass() {
+
+  // choosen units tables
+  this.UnitsType = 0;  // 0 -&gt; m, 1 -&gt; mi/ft, 2 -&gt; ft
+  this.LengthUnits = {
+    Selection: '.UnitsType',
+    Units: [ 'm', 'mi', 'ft' ],
+    Mults: [ 1, 1609.344, 0.3048 ]
+  };
+  this.BigLengthUnits = {
+    Selection: '.UnitsType',
+    Units: [ 'km', 'mi', 'ft' ],
+    Mults: [ 1000, 1609.344, 0.3048 ]
+  };
+  this.HeightUnits = {
+    Selection: '.UnitsType',
+    Units: [ 'm', 'ft', 'ft' ],
+    Mults: [ 1, 0.3048, 0.3048 ]
+  };
+  this.GradientUnits = {
+    Selection: '.UnitsType',
+    Units: [ '&#176;C/m', '&#176;C/ft', '&#176;C/ft' ],
+    Mults: [ 1, 1/0.3048, 1/0.3048 ]
+  };
+
+  this.AngleFormat = 0; // 0 -&gt; deg, 1 -&gt; DM, 2 -&gt; DMS
+  this.AngleFormats = {
+    Selection: '.AngleFormat',
+    Units: [ '&#176;', '', '' ],
+    Formats: [ 'prec', 'dm', 'dms' ],
+  };
+
+  this.DemoText = '';
+  this.Description = '';
+  this.AllStatesChanged = false;
+  this.OverlayImage = '';
+  this.OverlayImageAlpha = 0.5;
+  this.AlphaOpaque = 1;
+  this.pause = 0; // dummy for animation delays
+
+  this.RadiusEarth = 6371000;
+  this.EquatorRadiusFE = 10007543; // this.RadiusEarth * PI90;
+  this.NGridLines = 45;
+  this.GridSpacing = 0;
+  this.ShowModel = 1; // 1 -&gt; globe, 2 -&gt; flat, 3 -&gt; both mirrored, 4 -&gt; both side by side
+  this.showGrid = 1; // 0 -&gt; none, 1 -&gt; on, 3 -&gt; projection of globe to flat
+  this.showData = true; // true if any of the 3 following values are true (see Update)
+  this.ShowDataObject = true;
+  this.ShowDataRefraction = true;
+  this.ShowDataHorizon = true;
+  this.ShowLftRghtDrop = true;
+  this.showTangent = false;
+  this.showEyeLevel = true;
+  this.ShowTheodolite = false;
+  this.DeviceRatio = 3 / 2; // width / height of device screen
+  this.SceneWidth = 0;
+  this.SceneHeight = 0;
+  this.ViewcenterHorizon = 0;  // 0 -&gt; globe, 1 -&gt; flat earth, 2 -&gt; between, 3 -&gt; eye level
+  this.Diagonal35mmEquivalent = 43.2666153;
+
+  // refraction
+  this.BaroModel = null;
+  // RefractionSync = 0 -&gt; off, 1 -&gt; T,P, 2 -&gt; std, 3 -&gt; k=0.13, 4 -&gt; k=0.17, 5 -&gt; a=7/6, 6 -&gt; a=7/2
+  this.RefractionSync = 0;
+  this.RefractionFactMax = 10000;
+  this.RefractionFactMin = 0.5;
+  this.Pressure_mbar = 1013.25;
+  this.PressureLast_mbar = 1013.25;
+  this.Temperature_K = 288.15;
+  this.Temperature_C = 15;
+  this.TemperatureLast_C = 15;
+  this.TemperatureGradient = -0.0065;  // K/m
+  this.TemperatureGradientLast = -0.0065;
+  this.RefractionCoeff = 0;
+  this.RefractionCoeffLast = 0;
+  this.RefractionFactor = 1;
+  this.RefractionFactorLast = 1;
+  this.RefractedRadiusEarth = this.RadiusEarth;
+  this.RefractedRadiusEarthLast = this.RadiusEarth;
+  this.RefractionSlider = 0;
+  this.RefractionSliderLast = 0;
+  this.HeightSlider = 0;
+  this.HeightSliderLast = 0;
+  this.Height = 2;
+
+  this.ViewAngle = 0;  // viewAngle in deg (field of view)
+  this.ViewAngleField = 0;
+  this.ViewAngleSlider = 0;
+  this.ViewAngleSliderLast = 0;
+  this.Roll = 0;
+  this.Tilt = 0;
+  this.LastTilt = 0;
+  this.TiltSlider = 0;
+  this.LastTiltSlider = 0;
+  this.Pan = 0;
+  this.LastPan = 0;
+  this.PanSlider = 0;
+  this.LastPanSlider = 0;
+  this.PanRad = 0;
+  this.FocalLength = 0;
+  this.FocalLengthField = 3000;
+  this.FocalLengthSlider = 0;
+  this.FocalLengthSliderLast = 0;
+
+  this.HorizDistOnEyeLvl = 0;       // d
+  this.HorizSurfDist = 0;           // s
+  this.HorizDropFromEyeLvl = 0;     // p
+  this.HorizDropAnglFromEyeLvl = 0; // alpha
+  this.HorizRefrAngle = 0;
+  this.EarthCentrToHorizDisc = 0;   // R - b
+  this.HorizDropFromObsSurf = 0;    // b
+  this.ObjDropFromObsSurf = 0;
+  this.ObjDropAnglFromObsSurf = 0;
+  this.Bulge = 0;
+  this.HorizDistLineOfSight = 0;    // v
+  this.GridDeltaAngl = 0;           // about HorizDropAnglFromEyeLvl / NGridLines
+  this.PosEarthCenter = [ 0, 0, -this.RefractedRadiusEarth ]; // origin is at Observer EyeLevel
+
+  this.HorizLftRgtWidth = 0;
+  this.HorizLftRgtWidthAngle = 0;
+  this.HorizLftRgtDist = 0;
+  this.HorizLftRgtDropAngl = 0;
+  this.HorizLftRgtDrop = 0;
+
+  this.CamViewAngl = 0.1; // rad
+  this.CamPos = [ 0, 0, 0 ];
+  this.CamUp = [ 0, 0, 1 ];
+  this.CamViewCenter = [ 0, 1, 0 ];
+  this.CamSceneSize = 1;
+  this.TheodoliteTilt = 0;
+
+  // special additional flat earth perspective transformations (flerspective)
+  this.Flerspective = 0;    // 0 -&gt; normal, 1 -&gt; flerspective // feature removed
+  this.RefDistance = 10000; // feature removed
+
+  // object settings
+  this.NearObjIx = 0;
+  this.ObjType = [ 0, 0 ]; // 0 = M-Rod, 1 = mountain
+  this.ObjSideType = [ 0, 0 ]; // 0 = lin, 1 = 2col, 2 = rand, 3 = cos, 4 = sin
+  this.ObjSizeType = [ 1, 1 ]; // 1 = lin, 2 = rand, 3 = cos, 4 = sin
+
+  this.ObjSurfDist = [ 12000, 20000 ];
+  this.SliderObjSurfDistLog = [ 0, 0 ];
+  this.SliderObjSurfDistLogLast = [ 0, 0 ];
+
+  this.ObjSidePos = [ 0, 0 ];
+  this.SliderObjSidePosLog = [ 0, 0 ];
+  this.SliderObjSidePosLogLast = [ 0, 0 ];
+
+  this.ObjSize = [ 10, 10 ];
+  this.SliderObjSizeLog = [ 0, 0 ];
+  this.SliderObjSizeLogLast = [ 0, 0 ];
+
+  this.ObjDeltaDist = [ 300, 300 ];
+  this.SliderObjDeltaDistLog = [ 0, 0 ];
+  this.SliderObjDeltaDistLogLast = [ 0, 0 ];
+
+  this.ObjSideVar = [ 0, 0 ];
+  this.SliderObjSideVarLog = [ 0, 0 ];
+  this.SliderObjSideVarLogLast = [ 0, 0 ];
+
+  this.ObjSizeVar = [ 0, 0 ];
+  this.NObjects = [ 1, 0 ];
+
+  // object draw loop variables
+  this.ObjDeltaAngl = [ 0, 0 ];
+  this.ObjFirstAngl = [ 0, 0 ];
+  this.ObjLastAngl = [ 0, 0 ];
+  this.NObjectsDrawn = [ 0, 0 ];
+  this.MaxNObjectsToDraw = [ 0, 0 ];
+  this.CurrentObjAngl = [ 0, 0 ];
+  this.IsHiddenObj = [ false, false ];
+  this.LastPosValid = [ false, false ];
+
+  // computed object values
+  this.HorizRefrAngl = 0;
+  this.ObjRefrAngl = 0;
+  this.ObjLiftAbs = 0;
+  this.ObjLiftRelToHoriz = 0;
+  this.HorizonLift = 0;
+  this.ObjNearSize = 0;
+  this.ObjNearTilt = 0;
+  this.ObjSizeAngl = 0;
+  this.ObjHiddenAngl = 0;
+  this.ObjVisibleAngl = 0;
+  this.ObjRealSurfDist = 0;  // distance along surface taking refraction, ObjSurfDist and ObjSidePos into account
+  this.ObjSurfDistAngl = 0;
+  this.ObjHidden = 0;
+  this.ObjVisi = 0;
+  this.ObjTopAnglFromEyeLvl = 0;  // angle from observer tangent to top of object (90 - zenith angle) in deg
+  this.ObjTopAnglFromEyeLvlFE = 0;
+  this.ObjLineOfSightClearing = 0;
+  this.ObjLineOfSightClearingRefracted = 0;
+
+  // colors; for some elements '' -&gt; do not draw element
+  this.EyeLvlCol = 'magenta';
+  this.FEEqCol = 'black';
+  this.FEGridCol = 'black';
+  this.GlobeGridCol = 'blue';
+  this.GlobeFGridCol = 'red';
+  this.TangentCol = 'black';
+  this.FrameCol = 'black';
+
+  this.Update();
+}
+
+CurveAppClass.prototype.IsShowGlobe = function() {
+  return (this.ShowModel &amp; 1) || this.ShowModel == 4;
+}
+
+CurveAppClass.prototype.IsShowFlatEarth = function() {
+  return (this.ShowModel &amp; 2) || this.ShowModel == 4;
+}
+
+CurveAppClass.prototype.IsShowBothModels = function() {
+  return this.ShowModel &gt;= 3;
+}
+
+CurveAppClass.prototype.IsShowBothModelsMirror = function() {
+  return this.ShowModel == 3;
+}
+
+CurveAppClass.prototype.IsNearestObject = function( objIx ) {
+  // returns true if the current object drawn is the nearest object to the observer
+  return this.NObjectsDrawn[objIx] == this.NObjects[objIx]-1;
+}
+
+CurveAppClass.prototype.IsFurthestObject = function( objIx ) {
+  // returns true if the current object drawn is the furthest object to the observer
+  return this.NObjectsDrawn[objIx] == 0;
+}
+
+CurveAppClass.prototype.GetObjectSizeVar = function( objIx ) {
+  // some object sizes like M-Rod are dependent on ObjSizeVar
+  var sizeVar = 1;
+  if (this.ObjType[objIx] == 0) {
+    // M-Rod make size: var 0.1..11 for values of -1..+1 where 0 -&gt; 1
+    sizeVar = this.ObjSizeVar[objIx];
+    if (sizeVar &lt; 0) {
+      sizeVar = 1 + sizeVar;
+      if (sizeVar &lt; 0.1) sizeVar = 0.1;
+    } else {
+      sizeVar = 10 * sizeVar + 1;
+    }
+  }
+  return sizeVar;
+}
+
+CurveAppClass.prototype.IsVariableSizeObject = function( objIx ) {
+  // M-Rod is never variable, all the same size, but ObjSizeVar defines its size too, see GetObjectSizeVar()
+  return this.ObjType[objIx] != 0 &amp;&amp; Math.abs(this.ObjSizeVar[objIx]) &gt; 0.01;
+}
+
+CurveAppClass.prototype.Update = function() {
+
+  this.showData = this.ShowDataObject || this.ShowDataRefraction || this.ShowDataHorizon;
+
+  // input validation
+  if ( this.RadiusEarth  &lt; 100000 ) this.RadiusEarth  = 100000;
+  if ( this.EquatorRadiusFE &lt; 100000 ) this.EquatorRadiusFE = 100000;
+  if (this.NGridLines &gt; 200) this.NGridLines = 200;
+  if (this.NGridLines &lt; 0) this.NGridLines = 0;
+  this.ShowModel = Math.floor(this.ShowModel);
+  if (this.ShowModel &lt; 1 || this.ShowModel &gt; 4) this.ShowModel = 1;
+  this.showGrid = Math.floor(this.showGrid);
+  if (this.showGrid &lt; 0 || this.showGrid &gt; 3) this.showGrid = 1;
+  if (this.DeviceRatio &lt;= 0) this.DeviceRatio = DeviceRatio_Off;
+  this.ViewcenterHorizon = Math.floor(this.ViewcenterHorizon);
+  if (this.ViewcenterHorizon &lt; 0 || this.ViewcenterHorizon &gt; 3) this.ViewcenterHorizon = 0;
+
+  // handle height changes
+  if ( this.HeightSliderLast != this.HeightSlider ) {
+    this.Height = Math.pow( 10, -1 + 6 * this.HeightSlider );
+  }
+  if ( this.Height &lt; 0.001 ) this.Height = 0.001;
+  if ( this.Height &gt; 1000000000 ) this.Height = 1000000000;
+  this.HeightSlider = ( Math.log10( this.Height ) + 1 ) / 6;
+  this.HeightSliderLast = this.HeightSlider;
+  if (this.BaroModel) {
+    // BaroModel depends on Height
+    this.BaroModel.Update();
+  }
+
+  // handle refraction changes
+  // RefractionSync: 0 -&gt; off, 1 -&gt; T,P, 2 -&gt; std, 3 -&gt; k=0.13, 4 -&gt; k=0.17, 5 -&gt; a=7/6, 6 -&gt; a=7/2
+
+  this.RefractionSync = Math.floor(this.RefractionSync);
+  if (this.RefractionSync &lt; 0 || this.RefractionSync &gt; 6) this.RefractionSync = 1;
+  if (this.RefractionFactMin &lt; 0.1) this.RefractionFactMin = 0.1;
+  if (this.RefractionFactMin &gt; 1) this.RefractionFactMin = 1;
+  if (this.RefractionFactMax &lt; 10000) this.RefractionFactMax = 10000;
+  var k_min = 1 - 1 / this.RefractionFactMin;
+  var k_max = 1 - 1 / this.RefractionFactMax;
+  if (this.RefractionCoeff &lt; k_min) this.RefractionCoeff = k_min;
+  if (this.RefractionCoeff &gt; k_max) this.RefractionCoeff = k_max;
+  if (this.Pressure_mbar &lt; 0) this.Pressure_mbar = 0;
+  if (this.Pressure_mbar &gt; 1200) this.Pressure_mbar = 1200;
+  if (this.Temperature_C &lt; -100) this.Temperature_C = -100;
+  if (this.Temperature_C &gt; 100) this.Temperature_C = 100;
+
+  // revert sync mode to T,P or off if some refraction values have changed manually
+  if (this.AllStatesChanged) {
+    // refractionsSync has priority if multiple values have changed
+    if (this.RefractionSync == 2 || this.RefractionSync == 0) {
+      // ensure that TemperatureGradient has priority
+      this.TemperatureGradientLast = this.TemperatureGradient + 1;
+      this.RefractionCoeffLast = this.RefractionCoeff;
+    } else {
+      // ensure that RefractionCoeff has priority
+      this.RefractionCoeffLast = this.RefractionCoeff + 1;
+      this.TemperatureGradientLast = this.TemperatureGradient;
+    }
+  } else {
+    if (this.RefractionSync &gt;= 2 &amp;&amp;
+        (this.RefractionSlider != this.RefractionSliderLast ||
+         this.TemperatureGradient != this.TemperatureGradientLast ||
+         this.RefractionCoeff != this.RefractionCoeffLast ||
+         this.RefractionFactor != this.RefractionFactorLast ||
+         this.RefractedRadiusEarth != this.RefractedRadiusEarthLast)
+    )
+    {
+      this.RefractionSync = 1;
+    } else if (this.RefractionSync &gt; 0 &amp;&amp;
+               (this.Temperature_C != this.TemperatureLast_C ||
+                this.Pressure_mbar != this.PressureLast_mbar)
+    )
+    {
+      this.RefractionSync = 0;
+    }
+  }
+
+  // synchronize refraction Pressure_mbar, temp and gradient with baro settings
+  if (this.RefractionSync &gt;= 1) {
+    if (this.Height &gt; 84852) {
+      this.Temperature_C = -86.204;
+      this.Pressure_mbar = 0.00373383;
+      if (this.RefractionSync == 2) {
+        this.TemperatureGradient = -0.002;
+        this.TemperatureGradientLast = this.TemperatureGradient - 1; // indicate a change
+        this.RefractionCoeffLast = this.RefractionCoeff;
+      }
+    } else if (this.BaroModel) {
+      var baroModel = this.BaroModel;
+      this.Temperature_C = baroModel.T_C;
+      this.Pressure_mbar = baroModel.p / 100;
+      if (this.RefractionSync == 2) {
+        this.TemperatureGradient = baroModel.alpha;
+        this.TemperatureGradientLast = this.TemperatureGradient - 1; // indicate a change
+        this.RefractionCoeffLast = this.RefractionCoeff;
+      }
+    }
+  }
+
+  // handle sync modes
+  if (this.RefractionSync == 3) {
+    this.RefractionCoeff = 0.13;
+    this.RefractionCoeffLast = this.RefractionCoeff + 1; // indicate change
+  } else if (this.RefractionSync == 4) {
+    this.RefractionCoeff = 0.17;
+    this.RefractionCoeffLast = this.RefractionCoeff + 1; // indicate change
+  } else if (this.RefractionSync == 5) {
+    this.RefractionFactor = 7 / 6;
+    this.RefractionFactorLast = this.RefractionFactor + 1; // indicate change
+  } else if (this.RefractionSync == 6) {
+    this.RefractionFactor = 7 / 2;
+    this.RefractionFactorLast = this.RefractionFactor + 1; // indicate change
+  }
+
+  // handle changes of refraction input fields and sliders
+  this.Temperature_K = this.Temperature_C + 273.15;
+  if (this.RefractionSlider != this.RefractionSliderLast) {
+    // slider changed
+    if (Math.abs(this.RefractionSlider) &lt; 0.01) this.RefractionSlider = 0; // snap to 0
+    this.RefractionCoeff = k_max * this.RefractionSlider;
+  } else if (this.RefractionCoeff != this.RefractionCoeffLast) {
+    // k changed
+  } else if (this.TemperatureGradient != this.TemperatureGradientLast) {
+    // dT/dh changed
+    if (this.Temperature_K &lt; 3) this.Temperature_K = 3;
+    this.RefractionCoeff = 503 * (this.Pressure_mbar / (this.Temperature_K*this.Temperature_K)) * (0.0343 + this.TemperatureGradient);
+  } else if (this.RefractionFactor != this.RefractionFactorLast) {
+    // a changed
+    if (this.RefractionFactor &lt; this.RefractionFactMin) this.RefractionFactor = this.RefractionFactMin;
+    if (this.RefractionFactor &gt; this.RefractionFactMax) this.RefractionFactor = this.RefractionFactMax;
+    this.RefractionCoeff = 1 - 1 / this.RefractionFactor;
+  } else if (this.RefractedRadiusEarth != this.RefractedRadiusEarthLast) {
+    // R' changed
+    this.RefractionFactor = this.RefractedRadiusEarth / this.RadiusEarth;
+    if (this.RefractionFactor &lt; this.RefractionFactMin) this.RefractionFactor = this.RefractionFactMin;
+    if (this.RefractionFactor &gt; this.RefractionFactMax) this.RefractionFactor = this.RefractionFactMax;
+    this.RefractionCoeff = 1 - 1 / this.RefractionFactor;
+  }
+
+  // limit some inputs
+  if (this.RefractionCoeff &lt; k_min) this.RefractionCoeff = k_min;
+  if (this.RefractionCoeff &gt; k_max) this.RefractionCoeff = k_max;
+  if (this.Temperature_K &lt; 3) this.Temperature_K = 3;
+  if (this.Temperature_K &gt; 10000) this.Temperature_K = 10000;
+  this.Temperature_C = this.Temperature_K - 273.15;
+  if (this.Pressure_mbar &lt; 0.001) this.Pressure_mbar = 0.001;
+  if (this.Pressure_mbar &gt; 10000) this.Pressure_mbar = 10000;
+  if (Math.abs(this.RefractionCoeff) &lt; 0.000002) this.RefractionCoeff = 0;
+
+  // compute refraction values
+  this.TemperatureGradient = (this.RefractionCoeff * this.Temperature_K * this.Temperature_K) / (503 * this.Pressure_mbar) - 0.0343;
+  if (Math.abs(this.TemperatureGradient) &lt; 0.000001) this.TemperatureGradient = 0;
+  this.RefractionFactor = 1 / (1 - this.RefractionCoeff);
+  this.RefractedRadiusEarth = this.RadiusEarth * this.RefractionFactor;
+  this.RefractionSlider = this.RefractionCoeff / k_max;
+
+  // store current refration values for detecting user changes
+  this.RefractionSliderLast = this.RefractionSlider;
+  this.RefractionCoeffLast = this.RefractionCoeff;
+  this.TemperatureGradientLast = this.TemperatureGradient;
+  this.RefractionFactorLast = this.RefractionFactor;
+  this.RefractedRadiusEarthLast = this.RefractedRadiusEarth;
+  this.TemperatureLast_C = this.Temperature_C;
+  this.PressureLast_mbar = this.Pressure_mbar;
+
+  // handle ViewAngle and FocalLength changes
+  if ( this.FocalLengthSlider != this.FocalLengthSliderLast ) {
+    var f = (10000-21) * Math.pow(this.FocalLengthSlider,2) + 21;  // f = 21..10000
+    this.ViewAngle = toDeg( 2 * Math.atan( this.Diagonal35mmEquivalent / 2 / f ) );
+  } else if ( this.FocalLengthField != this.FocalLength ) {
+    this.ViewAngle = toDeg( 2 * Math.atan( this.Diagonal35mmEquivalent / 2 / this.FocalLengthField ) );
+  } else if ( this.ViewAngleSlider != this.ViewAngleSliderLast ) {
+    this.ViewAngle = this.ViewAngleSlider;
+  } else if ( this.ViewAngleField != this.ViewAngle ) {
+    this.ViewAngle = this.ViewAngleField;
+  }
+  if ( this.ViewAngle &lt; 0.1 ) this.ViewAngle = 0.1;
+  if ( this.ViewAngle &gt; 160 ) this.ViewAngle = 160;
+  this.CamViewAngl = toRad( this.ViewAngle );
+  this.FocalLength = this.Diagonal35mmEquivalent / ( 2 * Math.tan( this.CamViewAngl / 2 ) );
+  this.FocalLengthField = this.FocalLength;
+  var f = this.FocalLength - 21;
+  if (f &lt; 0) f = 0;
+  this.FocalLengthSlider = Math.pow(f/(10000-21),1/2);
+  this.FocalLengthSliderLast = this.FocalLengthSlider;
+  this.ViewAngleField = this.ViewAngle;
+  this.ViewAngleSlider = this.ViewAngle;
+  this.ViewAngleSliderLast = this.ViewAngle;
+
+  this.UpdateObjectInput(0);
+  this.UpdateObjectInput(1);
+
+  // compute diverse values
+  this.HorizDropAnglFromEyeLvl = Math.acos( this.RefractedRadiusEarth / (this.RefractedRadiusEarth + this.Height) );
+  this.HorizDistOnEyeLvl = this.RefractedRadiusEarth * Math.sin( this.HorizDropAnglFromEyeLvl );
+  this.HorizSurfDist = this.RefractedRadiusEarth * this.HorizDropAnglFromEyeLvl;
+  this.EarthCentrToHorizDisc = this.RefractedRadiusEarth * Math.cos( this.HorizDropAnglFromEyeLvl );
+  this.HorizDropFromObsSurf = this.RefractedRadiusEarth - this.EarthCentrToHorizDisc;
+  this.HorizDropFromEyeLvl = this.HorizDropFromObsSurf + this.Height;
+  this.HorizDistLineOfSight = ( this.Height + this.RefractedRadiusEarth ) * Math.sin( this.HorizDropAnglFromEyeLvl );
+  var horizDipNoRefr = Math.acos( this.RadiusEarth / (this.RadiusEarth + this.Height) );
+  this.HorizRefrAngle = horizDipNoRefr - this.HorizDropAnglFromEyeLvl;
+  // approx: HorizRefrAngle = dip(k=0) - dip(k) = sqrt( 2 * h / R ) - sqrt( (1-k) * 2 * h / R )
+
+  var exp2 = Math.floor( Math.log( PI90 / this.HorizDropAnglFromEyeLvl ) / Math.LN2 );
+  this.GridDeltaAngl = (PI90 / Math.pow( 2, exp2 ) / this.NGridLines);
+  this.GridSpacing = this.IsShowGlobe() ? this.GridDeltaAngl * this.RefractedRadiusEarth : 0;
+  this.PosEarthCenter = [ 0, 0, -(this.RefractedRadiusEarth + this.Height) ];
+
+  // Tilt and Pan slider synchronization
+  if (this.Tilt != this.LastTilt) {
+    if (this.Tilt &lt; -85) this.Tilt = -85;
+    if (this.Tilt &gt;  45) this.Tilt =  45;
+    if (this.Tilt &gt; 0) {
+      this.TiltSlider = Math.sqrt( this.Tilt / 45 );
+    } else {
+      this.TiltSlider = - Math.sqrt( -this.Tilt / 85 );
+    }
+  } else if (this.TiltSlider != this.LastTiltSlider) {
+    if (this.TiltSlider &gt; 0) {
+      this.Tilt = Math.pow( this.TiltSlider, 2 ) * 45;
+    } else {
+      this.Tilt = - Math.pow( this.TiltSlider, 2 ) * 85;
+    }
+  }
+  this.LastTilt = this.Tilt;
+  this.LastTiltSlider = this.TiltSlider;
+
+  if (this.Pan != this.LastPan) {
+    if (this.Pan &lt; -180) this.Pan = -180;
+    if (this.Pan &gt;  180) this.Pan =  180;
+    if (this.Pan &gt; 0) {
+      this.PanSlider = Math.sqrt( this.Pan / 90 );
+    } else {
+      this.PanSlider = - Math.sqrt( -this.Pan / 90 );
+    }
+  } else if (this.PanSlider != this.LastPanSlider) {
+    if (this.PanSlider &gt; 0) {
+      this.Pan = Math.pow( this.PanSlider, 2 ) * 90;
+    } else {
+      this.Pan = - Math.pow( this.PanSlider, 2 ) * 90;
+    }
+  }
+  this.PanRad = toRad( this.Pan );
+  this.LastPan = this.Pan;
+  this.LastPanSlider = this.PanSlider;
+
+  // compute CamViewCenter from panning
+  if (this.Roll &lt; -180) this.Roll = -180;
+  if (this.Roll &gt;  180) this.Roll = 180;
+  this.CompCameraParams( this.PanRad, this.Tilt, this.Roll );
+
+  // compute scene size taking device ratio into account
+  var vpRatio = 3 / 2;
+  var diag = 2 * this.HorizDistLineOfSight * Math.tan( this.CamViewAngl / 2 );
+  this.SceneHeight = diag / Math.sqrt( 1 + this.DeviceRatio*this.DeviceRatio );
+  this.SceneWidth = this.DeviceRatio * this.SceneHeight;
+  if ( this.DeviceRatio &gt; vpRatio ) {
+    // device is wider then viewport
+    this.CamSceneSize = this.SceneWidth / vpRatio;
+  } else {
+    this.CamSceneSize = this.SceneHeight;
+  }
+
+  // compute horizon left right drop (0 = whole earth in view, can't calculate left right drop)
+  var yFieldOfView2 = toRad( this.ViewAngle ) / Math.sqrt( 1 + 1 / (this.DeviceRatio*this.DeviceRatio) ) / 2;
+  var width2HorLRDrop = this.HorizDistLineOfSight * Math.sin( yFieldOfView2 );
+  if (width2HorLRDrop &lt; this.HorizDistOnEyeLvl) {
+    this.HorizLftRgtWidth = width2HorLRDrop * 2;
+    this.HorizLftRgtWidthAngle = toDeg( 2 * Math.asin( this.HorizLftRgtWidth / (2 * this.HorizDistLineOfSight) ) ); 
+    this.HorizLftRgtDist = Math.sqrt( this.HorizDistOnEyeLvl*this.HorizDistOnEyeLvl - width2HorLRDrop*width2HorLRDrop );
+    var angVertHorizLRDrop = Math.atan( this.HorizLftRgtDist / this.HorizDropFromEyeLvl );
+    var angHorizLRDrop_rad = Math.PI/2 - this.HorizDropAnglFromEyeLvl - angVertHorizLRDrop;
+    this.HorizLftRgtDropAngl = toDeg( angHorizLRDrop_rad );
+    this.HorizLftRgtDrop = this.HorizDistLineOfSight * angHorizLRDrop_rad;
+  } else {
+    this.HorizLftRgtDist = 0;
+    this.HorizLftRgtWidth = 0;
+    this.HorizLftRgtWidthAngle = 0;
+    this.HorizLftRgtDropAngl = 0;
+    this.HorizLftRgtDrop = 0;
+  }
+
+  function compObjVect( dist, side, size, rad, h ) {
+    // dist and side are along surface
+    var R = rad + size;
+    var a1 = side / rad;
+    var a2 = dist / rad;
+    var r = R * Math.cos( a1 );
+    var vx = R * Math.sin( a1 );
+    var vy = r * Math.sin( a2 );
+    var vz = r * Math.cos( a2 ) - (rad + h);
+    return [ vx, vy, vz ];
+  }
+
+  function compViewDist( v ) {
+    return Math.sqrt( v[0]*v[0] + v[1]*v[1] + v[2]*v[2] );
+  }
+
+  function compVectAng( v1, v2 ) {
+    var sp = JsgVect3.ScalarProd( JsgVect3.Norm(v1), JsgVect3.Norm(v2) );
+    if (sp &gt;  1) sp =  1; // handle rounding errors
+    if (sp &lt; -1) sp = -1; // handle rounding errors
+    return Math.acos( sp );
+  }
+
+  // horizon refraction
+  if (Math.abs(this.RadiusEarth - this.RefractedRadiusEarth) &gt; 1e-5) {
+    var dropAngle_geom = Math.acos( this.RadiusEarth / (this.RadiusEarth + this.Height) );
+    var horizSurfDist_geom = this.RadiusEarth * dropAngle_geom;
+    var vectToHorizon_geom = compObjVect( horizSurfDist_geom, 0, 0, this.RadiusEarth, this.Height );
+    var vectToHorizon_refracted = compObjVect( this.HorizSurfDist, 0, 0, this.RefractedRadiusEarth, this.Height );
+    this.HorizRefrAngl = toDeg( compVectAng( vectToHorizon_geom, vectToHorizon_refracted ) );
+    if (this.RefractionCoeff &lt; 0) this.HorizRefrAngl *= -1;
+  } else {
+    this.HorizRefrAngl = 0;
+  }
+
+  // some computed object values
+  var objIx = 0;
+  if (this.NObjects[0] == 0) objIx = 1;
+  if (this.NObjects[0] &gt; 0 &amp;&amp; this.NObjects[1] &gt; 0 &amp;&amp; this.ObjSurfDist[0] &gt; this.ObjSurfDist[1]) objIx = 1;
+  this.NearObjIx = objIx;
+
+  if (this.NObjects[objIx] &gt; 0) {
+
+    // ObjRealSurfDist = distance from origin to object base along surface
+    var vectObjPos = compObjVect( this.ObjSurfDist[objIx], this.ObjSidePos[objIx], 0, this.RefractedRadiusEarth, -this.RefractedRadiusEarth );
+    this.ObjSurfDistAngl = compVectAng( vectObjPos, [ 0, 0, this.RefractedRadiusEarth ] );
+    this.ObjRealSurfDist = this.ObjSurfDistAngl * this.RefractedRadiusEarth;
+
+    // Bulge and drop
+    this.Bulge = this.RefractedRadiusEarth * (1 - Math.cos( this.ObjRealSurfDist / (2 * this.RefractedRadiusEarth) ));
+    this.ObjDropFromObsSurf = this.RefractedRadiusEarth * (1 - Math.cos( this.ObjRealSurfDist / this.RefractedRadiusEarth ) );
+    var hdist = this.RefractedRadiusEarth * Math.sin( this.ObjRealSurfDist / this.RefractedRadiusEarth );
+    this.ObjDropAnglFromObsSurf = toDeg( Math.atan( this.ObjDropFromObsSurf / hdist ) );
+
+    this.ObjNearSize = this.GetObjectSizeVar(objIx) * this.ObjSize[objIx];
+    var vectToObjBase_refracted = compObjVect( this.ObjSurfDist[objIx], this.ObjSidePos[objIx], 0, this.RefractedRadiusEarth, this.Height );
+    var vectToObjTop_refracted  = compObjVect( this.ObjSurfDist[objIx], this.ObjSidePos[objIx], this.ObjNearSize, this.RefractedRadiusEarth, this.Height );
+    var vectToObjBase_geom = compObjVect( this.ObjSurfDist[objIx], this.ObjSidePos[objIx], 0, this.RadiusEarth, this.Height );
+
+    var objUpDir = JsgVect3.Sub( vectToObjTop_refracted, vectToObjBase_refracted );
+    this.ObjNearTilt = toDeg( compVectAng( [0,0,1], objUpDir ) );
+    this.ObjSizeAngl = toDeg( compVectAng( vectToObjBase_refracted, vectToObjTop_refracted ) );
+    if (Math.abs(this.ObjSizeAngl) &lt; 1e-5) this.ObjSizeAngl = 0;
+    this.ObjRefrAngl = toDeg( compVectAng( vectToObjBase_geom, vectToObjBase_refracted ) );
+    if (Math.abs(this.ObjRefrAngl) &lt; 1e-5) this.ObjRefrAngl = 0;
+    if (this.RefractionCoeff &lt; 0) this.ObjRefrAngl *= -1;
+
+    this.ObjLiftAbs = 0;
+    this.ObjLiftRelToHoriz = 0;
+    this.HorizonLift = 0;
+    if (this.ObjSizeAngl != 0) {
+      this.ObjLiftAbs = this.ObjNearSize * this.ObjRefrAngl / this.ObjSizeAngl;
+      this.HorizonLift = this.ObjNearSize * this.HorizRefrAngl / this.ObjSizeAngl;
+      this.ObjLiftRelToHoriz = this.ObjLiftAbs - this.HorizonLift;
+    }
+
+    // compute hidden part
+    if (this.ObjSurfDistAngl &gt; this.HorizDropAnglFromEyeLvl) {
+
+      // object lies behind horizon
+      var cosaHorObj = Math.cos( this.ObjSurfDistAngl - this.HorizDropAnglFromEyeLvl );
+      this.ObjHidden = this.RefractedRadiusEarth * ( 1 - cosaHorObj ) / cosaHorObj;
+      this.ObjVisi = this.ObjNearSize - this.ObjHidden;
+      if (this.ObjVisi &lt; 0) this.ObjVisi = 0;
+      this.ObjHiddenAngl = this.ObjSizeAngl * this.ObjHidden / this.ObjNearSize;
+      this.ObjVisibleAngl = this.ObjSizeAngl * this.ObjVisi / this.ObjNearSize;
+
+    } else {
+
+      // object lies in front of horizon
+      this.ObjHidden = 0;
+      this.ObjVisi = this.ObjNearSize;
+      this.ObjHiddenAngl = 0;
+      this.ObjVisibleAngl = this.ObjSizeAngl;
+    }
+
+    // compute vertical angle from horizontal to target top (= 90 deg - zenith angle)
+    // c = line of sight observer to target top
+    var a = this.RefractedRadiusEarth + this.Height;
+    var b = this.RefractedRadiusEarth + this.ObjNearSize;
+    var c = Math.sqrt( a*a + b*b -2*a*b * Math.cos( this.ObjRealSurfDist / this.RefractedRadiusEarth ) );
+    var a1 = (c*c - b*b + a*a) / (2 * a);
+    this.ObjTopAnglFromEyeLvl = -Math.asin( a1 / c ) * 180 / Math.PI;
+    this.ObjTopAnglFromEyeLvlFE = Math.atan( (this.ObjSize[objIx] - this.Height) / this.ObjRealSurfDist ) * 180 / Math.PI;
+
+    // compute Line of Sight Clearing above Horizon
+    var vectObjPos = compObjVect( this.ObjSurfDist[objIx], this.ObjSidePos[objIx], 0, this.RadiusEarth, -this.RadiusEarth );
+    var objSurfDistAngl = compVectAng( vectObjPos, [ 0, 0, this.RadiusEarth ] );
+    var d = objSurfDistAngl * this.RadiusEarth;
+    var a = this.RadiusEarth + this.Height;
+    var b = this.RadiusEarth + this.ObjNearSize;
+    var w = d / this.RadiusEarth;
+    var r = a * b * Math.sin(w) / Math.sqrt( Math.pow( a * Math.sin(w), 2) + Math.pow( b - a * Math.cos(w), 2 ) );
+    this.LineOfSightClearing = r - this.RadiusEarth;
+
+    var a = this.RefractedRadiusEarth + this.Height;
+    var b = this.RefractedRadiusEarth + this.ObjNearSize;
+    var w = d / this.RefractedRadiusEarth;
+    var r = a * b * Math.sin(w) / Math.sqrt( Math.pow( a * Math.sin(w), 2) + Math.pow( b - a * Math.cos(w), 2 ) );
+    this.LineOfSightClearingRefracted = r - this.RefractedRadiusEarth;
+
+  } else {
+
+    this.Bulge = 0;
+    this.ObjDropFromObsSurf = 0;
+    this.ObjDropAnglFromObsSurf = 0;
+    this.ObjRefrAngl = this.HorizRefrAngl;
+    this.ObjLiftAbs = 0;
+    this.HorizonLift = 0;
+    this.ObjLiftRelToHoriz = 0;
+    this.ObjSizeAngl = 0;
+    this.ObjHidden = 0;
+    this.ObjVisi = 0;
+    this.ObjHiddenAngl = 0;
+    this.ObjVisibleAngl = 0;
+    this.ObjRealSurfDist = 0;
+    this.ObjSurfDistAngl = 0;
+    this.LineOfSightClearing = 0;
+    this.LineOfSightClearingRefracted = 0;
+
+  }
+  this.AllStatesChanged = false;
+
+}
+
+CurveAppClass.prototype.CompCameraParams = function( pan, tilt, roll ) {
+  var dvc, avc;
+  dvc = Math.sqrt( this.HorizDistOnEyeLvl * this.HorizDistOnEyeLvl + this.HorizDropFromEyeLvl * this.HorizDropFromEyeLvl );
+  if (this.ViewcenterHorizon == 0) {
+    // view center is globe horizon
+    avc = this.HorizDropAnglFromEyeLvl;
+  } else if (this.ViewcenterHorizon == 1) {
+    // view center is flat earth equator
+    avc = Math.atan( this.Height / this.EquatorRadiusFE );
+  } else if (this.ViewcenterHorizon == 2) {
+    // view center is between globe horizon and flat earth equator
+    avc = (Math.atan( this.Height / this.EquatorRadiusFE ) + this.HorizDropAnglFromEyeLvl) / 2;
+  } else {
+    // view center is eye level
+    avc = 0;
+  }
+  avc -= toRad( tilt );
+  if ( avc &gt; 0.9999*PI90 ) avc = 0.9999*PI90;
+  if ( avc &lt; -0.9999*PI90 ) avc = -0.9999*PI90;
+  this.TheodoliteTilt = -avc * 180 / Math.PI;
+  var zvc = - dvc * Math.sin( avc );
+  var rvc = dvc * Math.cos( avc );
+  var xvc = rvc * Math.sin( pan );
+  var yvc = rvc * Math.cos( pan );
+  this.CamViewCenter = [ xvc, yvc, zvc ];
+  var nvc = JsgVect3.Norm( this.CamViewCenter );
+  var v = JsgVect3.Norm( [ xvc, yvc, 0 ] );
+  var n = JsgVect3.Mult( v, [ 0, 0, 1 ] );
+  var up = JsgVect3.Mult( n, nvc );
+
+  // compute camera up and pos
+  var a = toRad( roll );
+  this.CamUp = JsgVect3.Add( JsgVect3.Scale( n, Math.sin(a) ), JsgVect3.Scale( up, Math.cos(a) ) );
+  this.CamPos = [ 0, 0, 0 ];
+}
+
+CurveAppClass.prototype.UpdateObjectInput = function( objIx ) {
+
+  // object settings
+  this.NObjects[objIx] = Math.round(this.NObjects[objIx]);
+  if (this.NObjects[objIx] &lt; 0) this.NObjects[objIx] = 0;
+  if (this.NObjects[objIx] &gt; 500) this.NObjects[objIx] = 500;
+
+  if (this.SliderObjSurfDistLogLast[objIx] != this.SliderObjSurfDistLog[objIx]) {
+    var distSign = this.SliderObjSurfDistLog[objIx] &lt; 0 ? -1 : 1;
+    var distVal = Math.abs( this.SliderObjSurfDistLog[objIx] );
+    if (distVal &lt; 1) {
+      this.ObjSurfDist[objIx] = 100 * distVal;
+    } else {
+      this.ObjSurfDist[objIx] = 10 * Math.pow( 10, this.SliderObjSurfDistLog[objIx] );
+    }
+    this.ObjSurfDist[objIx] *= distSign;
+  }
+  var distLimit = this.RefractedRadiusEarth * Math.PI / 2;
+  if (this.ObjSurfDist[objIx] &lt; -distLimit) this.ObjSurfDist[objIx] = -distLimit;
+  if (this.ObjSurfDist[objIx] &gt;  distLimit) this.ObjSurfDist[objIx] =  distLimit;
+  var distSign = this.ObjSurfDist[objIx] &lt; 0 ? -1 : 1;
+  var distVal  = Math.abs( this.ObjSurfDist[objIx] );
+  if (distVal &lt; 100) {
+    this.SliderObjSurfDistLog[objIx] = distVal / 100;
+  } else {
+    this.SliderObjSurfDistLog[objIx] = Math.log10( distVal / 10 );
+  }
+  this.SliderObjSurfDistLog[objIx] *= distSign;
+  this.SliderObjSurfDistLogLast[objIx] = this.SliderObjSurfDistLog[objIx];
+
+  if (this.SliderObjSidePosLog[objIx] != this.SliderObjSidePosLogLast[objIx]) {
+    var sidePosSign = this.SliderObjSidePosLog[objIx] &lt; 0 ? -1 : 1;
+    var sidePosVal = Math.abs( this.SliderObjSidePosLog[objIx] );
+    if (sidePosVal &lt; 1) {
+      this.ObjSidePos[objIx] = 100 * sidePosVal;
+    } else {
+      this.ObjSidePos[objIx] = 10 * Math.pow( 10, sidePosVal );
+    }
+    this.ObjSidePos[objIx] *= sidePosSign;
+  }
+  var sidePosLimit = this.RefractedRadiusEarth * Math.PI / 4;
+  if (this.ObjSidePos[objIx] &lt; -sidePosLimit) this.ObjSidePos[objIx] = -sidePosLimit;
+  if (this.ObjSidePos[objIx] &gt; sidePosLimit) this.ObjSidePos[objIx] = sidePosLimit;
+  var sidePosSign = this.ObjSidePos[objIx] &lt; 0 ? -1 : 1;
+  var sidePosVal = Math.abs( this.ObjSidePos[objIx] );
+  if (sidePosVal &lt; 100) {
+    this.SliderObjSidePosLog[objIx] = sidePosVal / 100;
+  } else {
+    this.SliderObjSidePosLog[objIx] = Math.log10( sidePosVal / 10 );
+  }
+  this.SliderObjSidePosLog[objIx] *= sidePosSign;
+  this.SliderObjSidePosLogLast[objIx] = this.SliderObjSidePosLog[objIx];
+
+  if (this.SliderObjSideVarLog[objIx] != this.SliderObjSideVarLogLast[objIx]) {
+    var sideVarSign = this.SliderObjSideVarLog[objIx] &lt; 0 ? -1 : 1;
+    var sideVarVal = Math.abs( this.SliderObjSideVarLog[objIx] );
+    if (sideVarVal &lt; 1) {
+      this.ObjSideVar[objIx] = 10 * sideVarVal;
+    } else {
+      this.ObjSideVar[objIx] = Math.pow( 10, sideVarVal );
+    }
+    this.ObjSideVar[objIx] *= sideVarSign;
+  }
+  var sideVarLimit = this.RefractedRadiusEarth * Math.PI / 4;
+  if (this.ObjSideVar[objIx] &lt; -sideVarLimit) this.ObjSideVar[objIx] = -sideVarLimit;
+  if (this.ObjSideVar[objIx] &gt; sideVarLimit) this.ObjSideVar[objIx] = sideVarLimit;
+  var sideVarSign = this.ObjSideVar[objIx] &lt; 0 ? -1 : 1;
+  var sideVarVal = Math.abs( this.ObjSideVar[objIx] );
+  if (sideVarVal &lt; 10) {
+    this.SliderObjSideVarLog[objIx] = sideVarVal / 10;
+  } else {
+    this.SliderObjSideVarLog[objIx] = Math.log10( sideVarVal );
+  }
+  this.SliderObjSideVarLog[objIx] *= sideVarSign;
+  this.SliderObjSideVarLogLast[objIx] = this.SliderObjSideVarLog[objIx];
+
+  if (this.SliderObjSizeLog[objIx] != this.SliderObjSizeLogLast[objIx]) {
+    this.ObjSize[objIx] = Math.pow( 10, this.SliderObjSizeLog[objIx] );
+  }
+  if (this.ObjSize[objIx] &lt; 0.001) this.ObjSize[objIx] = 0.001;
+  if (this.ObjSize[objIx] &gt; 1e9) this.ObjSize[objIx] = 1e9;
+  this.SliderObjSizeLog[objIx] = Math.log10( this.ObjSize[objIx] );
+  this.SliderObjSizeLogLast[objIx] = this.SliderObjSizeLog[objIx];
+
+  if (this.SliderObjDeltaDistLog[objIx] != this.SliderObjDeltaDistLogLast[objIx]) {
+    this.ObjDeltaDist[objIx] = 10 * Math.pow( 10, this.SliderObjDeltaDistLog[objIx] );
+  }
+  var deltaDistLimit = this.RefractedRadiusEarth * PI90;
+  if (this.ObjDeltaDist[objIx] &lt; 0.001) this.ObjDeltaDist[objIx] = 0.001;
+  if (this.ObjDeltaDist[objIx] &gt; deltaDistLimit) this.ObjDeltaDist[objIx] = deltaDistLimit;
+  this.SliderObjDeltaDistLog[objIx] = Math.log10( this.ObjDeltaDist[objIx] / 10 );
+  this.SliderObjDeltaDistLogLast[objIx] = this.SliderObjDeltaDistLog[objIx];
+
+}
+
+var CurveApp = new CurveAppClass();
+var UpdateAllRunning = false;
+
+DataX.AssignApp( 'AdvCurveApp', CurveApp, CurveAppMetaData, null, UpdateAllChanged );
+DataX.AssignSaveRestoreDomObj( 'SaveRestorePanel' );
+DataX.SetupUrlStateHandler( 'App' );
+
+function UpdateAll() {
+  if (UpdateAllRunning) return;
+  UpdateAllRunning = true;
+  try {
+    CurveApp.Update();
+    ControlPanels.Update();
+    graph.Redraw();
+  }
+  finally {
+    UpdateAllRunning = false;
+  }
+}
+
+function UpdateAllChanged() {
+  CurveApp.AllStatesChanged = true;
+  UpdateAll();
+}
+
+xOnLoad(
+  function() {
+    Tabs.AddButtonClickHandler( 'CurveSettingsTabs', 'ResetButton',
+      function( buttonData ) {
+        ResetApp( true );
+      }
+    );
+    Tabs.AddButtonClickHandler( 'CurveSettingsTabs', 'StdRefrButton',
+      function( buttonData ) {
+        SetStdRefraction();
+      }
+    );
+    Tabs.AddButtonClickHandler( 'CurveSettingsTabs', 'ZeroRefrButton',
+      function( buttonData ) {
+        Set0Refraction();
+      }
+    );
+    HandleUrlCommands();
+    UpdateAll();
+  }
+);
+
+function LVal( x ) {
+  return x / CurveApp.LengthUnits.Mults[CurveApp.UnitsType];
+}
+
+function LUnit() {
+  return ' ' + CurveApp.LengthUnits.Units[CurveApp.UnitsType];
+}
+
+function HVal( x ) {
+  return x / CurveApp.HeightUnits.Mults[CurveApp.UnitsType];
+}
+
+function HUnit() {
+  return ' ' + CurveApp.HeightUnits.Units[CurveApp.UnitsType];
+}
+
+function BVal( x ) {
+  return x / CurveApp.BigLengthUnits.Mults[CurveApp.UnitsType];
+}
+
+function BUnit() {
+  return ' ' + CurveApp.BigLengthUnits.Units[CurveApp.UnitsType];
+}
+
+function AVal( x ) {
+  return x / CurveApp.GradientUnits.Mults[CurveApp.UnitsType];
+}
+
+function AUnit() {
+  return CurveApp.GradientUnits.Units[CurveApp.UnitsType];
+}
+
+function FormatAngle( ang ) {
+  if (CurveApp.AngleFormat == 0) {
+    return NumFormatter.Format( ang, 'prec', 6, '&#176;' );
+  } else if (CurveApp.AngleFormat == 1) {
+    return NumFormatter.Format( ang, 'dm', 5, '' );
+  } else {
+    return NumFormatter.Format( ang, 'dms', 5, '' );
+  }
+}
+
+var graph = NewGraphX3D( {
+  Id: 'JsGraph1',
+  Width: '100%',
+  Height: '66.67%',
+  DrawFunc: DrawModel,
+  AutoReset: true,
+  AutoClear: true,
+  AutoScalePix: true
+} );
+
+function DrawModel( g ) {
+
+  var m = CurveApp;
+  g.MaxCurveSegments = 256;
+  g.SetAngleMeasure( 'rad' );
+  g.SetViewport( 0, 1, -0.5, -2 );
+  g.SetGraphClipping( true, '', 0 );
+  g.SetCameraClipping( 0.001 );
+  g.SetWindowToCameraScreen();
+
+  g.SetCamera( {
+    SceneSize: m.CamSceneSize,
+    CamPos: m.CamPos,
+    CamUp: m.CamUp,
+    CamViewCenter: m.CamViewCenter,
+  } );
+  g.SetCameraZoom( 1 );
+
+  var specialLineWidth = 1.5;
+
+  // draw eye level
+  var rotz = JsgMat3.RotatingZ( -m.PanRad );
+  if ( m.showEyeLevel || m.ShowTheodolite ) {
+    g.SetLineAttr( m.EyeLvlCol, 1 );
+    g.SetAlpha( m.AlphaOpaque );
+    g.Line3D( JsgMat3.Trans( rotz, [ -2*m.SceneWidth, m.HorizDistOnEyeLvl, 0 ] ), JsgMat3.Trans( rotz, [ 2*m.SceneWidth, m.HorizDistOnEyeLvl, 0 ] ) );
+    g.SetTextAttr( 'Arial', 12, m.EyeLvlCol, 'normal', 'normal', 'right', 'bottom', 30, 4 );
+    g.SetTextRotation( toRad(-m.Roll) );
+    g.Text3D( 'Eye-Level', JsgMat3.Trans( rotz, [ 0, m.HorizDistOnEyeLvl, 0 ] ) );
+    g.SetTextRotation( 0 );
+  }
+
+  // Flat Earth
+
+  var objIx = 0;
+  if (m.NObjects[0] == 0) objIx = 1;
+
+  if ( m.IsShowFlatEarth() ) {
+
+    // set clipping if both models are shown to restrict graphic to one half of the screen
+    if (m.IsShowBothModels()) {
+      var xpos = 0;
+      g.SetClipRect( xpos, 0, g.CanvasWidth/2, g.CanvasHeight, 'canvas' );
+    }
+    if (m.IsShowBothModelsMirror()) {
+      m.CompCameraParams( -m.PanRad, m.Tilt, m.Roll );
+      g.SetCamera( {
+        CamPos: m.CamPos,
+        CamUp: m.CamUp,
+        CamViewCenter: m.CamViewCenter,
+      } );
+    }
+
+    // draw flat earth horizon and equator
+    g.SetAlpha( m.AlphaOpaque );
+    g.SetPlane( [ 0, 0, -m.Height ], [ 1, 0, 0 ], [ 0, 1, 0 ] );
+    g.SetLineAttr( m.FEEqCol, 1 );
+    g.CircleOnPlane( 0, 0, m.EquatorRadiusFE, 1 );
+    g.SetLineWidth( 2 );
+    g.CircleOnPlane( 0, 0, 2*m.EquatorRadiusFE, 1 );
+
+    var aMax = 2 * Math.PI;
+    var alpha = m.AlphaOpaque * (0.6 - 0.5 * (Math.log10( m.Height ) / 9));
+    g.SetAlpha( alpha );
+    g.SetLineAttr( m.FEGridCol, 1 );
+
+    if (m.showGrid &gt; 0) {
+
+      // circle lines
+      var crDelta = m.EquatorRadiusFE / 12;
+      var crMax = 2 * m.EquatorRadiusFE - crDelta / 2;
+      g.SetPlane( [ 0, 0, -m.Height ], [ 1, 0, 0 ], [ 0, 1, 0 ] );
+      for ( var cr = crDelta; cr &lt; crMax; cr += crDelta ) {
+        g.ArcOnPlane( 0, 0, cr, 0, aMax, 1 );
+      }
+      if (m.Height &lt; 700000) {
+        crMax = crDelta;
+        crDelta /= 10;
+        crMax -= crDelta / 2;
+        for ( var cr = crDelta; cr &lt; crMax; cr += crDelta ) {
+          g.ArcOnPlane( 0, 0, cr, 0, aMax, 1 );
+        }
+      }
+      if (m.Height &lt; 30000) {
+        crMax = crDelta;
+        crDelta /= 10;
+        crMax -= crDelta / 2;
+        for ( var cr = crDelta; cr &lt; crMax; cr += crDelta ) {
+          g.ArcOnPlane( 0, 0, cr, 0, aMax, 1 );
+        }
+      }
+      if (m.Height &lt; 3000) {
+        crMax = crDelta;
+        crDelta /= 10;
+        crMax -= crDelta / 2;
+        for ( var cr = crDelta; cr &lt; crMax; cr += crDelta ) {
+          g.ArcOnPlane( 0, 0, cr, 0, aMax, 1 );
+        }
+      }
+      if (m.Height &lt; 300) {
+        crMax = crDelta;
+        crDelta /= 10;
+        crMax -= crDelta / 2;
+        for ( var cr = crDelta; cr &lt; crMax; cr += crDelta ) {
+          g.ArcOnPlane( 0, 0, cr, 0, aMax, 1 );
+        }
+      }
+
+      // ray lines
+      g.SetAlpha( alpha );
+      g.SetLineAttr( m.FEGridCol, 1 );
+      var caDelta = Math.PI / 12;
+      var caMax = 2 * Math.PI;
+      caMax -= caDelta / 2;
+      var r = 2 * m.EquatorRadiusFE;
+      for ( var ca = 0; ca &lt; caMax; ca += caDelta ) {
+        var c = Math.cos( ca );
+        var s = Math.sin( ca );
+        g.LineOnPlane( r * c, r * s, 0, 0 );
+      }
+    }
+
+    var drawObjIx = 1;
+    if (m.ObjSurfDist[0] &gt; m.ObjSurfDist[1]) drawObjIx = 0;
+    m.LastPosValid[0] = false;
+    m.LastPosValid[1] = false;
+    DrawObjectsBeforeHorizon( drawObjIx, g, false );
+    drawObjIx = (drawObjIx + 1) % 2;
+    DrawObjectsBeforeHorizon( drawObjIx, g, false );
+
+    // reset inverse panning
+    if (m.IsShowBothModelsMirror()) {
+      m.CompCameraParams( m.PanRad, m.Tilt, m.Roll );
+      g.SetCamera( {
+        CamPos: m.CamPos,
+        CamUp: m.CamUp,
+        CamViewCenter: m.CamViewCenter,
+      } );
+    }
+    // reset clipping
+    if (m.IsShowBothModels()) {
+      g.SetClipping( 'canvas' );
+    }
+
+  } // end NGridLines &gt; 0
+
+  // Globe Earth
+
+  if (m.IsShowGlobe()) {
+
+    // set clipping if both models are shown to restrict graphic to one half of the screen
+    if (m.IsShowBothModels()) {
+      var xpos = g.CanvasWidth / 2;
+      g.SetClipRect( xpos, 0, g.CanvasWidth/2, g.CanvasHeight, 'canvas' );
+    }
+
+    var drawObjIx = 1;
+    if (m.ObjSurfDist[0] &gt; m.ObjSurfDist[1]) drawObjIx = 0;
+    m.LastPosValid[0] = false;
+    m.LastPosValid[1] = false;
+    DrawObjectsBehindHorizon( drawObjIx, g );
+    drawObjIx = (drawObjIx + 1) % 2;
+    DrawObjectsBehindHorizon( drawObjIx, g );
+
+    var alpha = m.AlphaOpaque * (0.6 - 0.5 * (Math.log10( m.Height ) / 9) );
+    g.SetAlpha( alpha );
+    g.SetLineAttr( m.GlobeGridCol, 1 );
+
+    // show globe grid
+    if ( m.showGrid &amp; 1 ) {
+
+      // latitude lines
+      var latMax = m.HorizDropAnglFromEyeLvl;
+      var latStart = -( Math.floor( latMax / m.GridDeltaAngl ) * m.GridDeltaAngl );
+      for ( var lat = latStart; lat &lt; latMax; lat += m.GridDeltaAngl ) {
+        var dLatPlaneDisk = m.EarthCentrToHorizDisc / Math.cos( lat );
+        var longMax = Math.acos( dLatPlaneDisk / m.RefractedRadiusEarth );
+        var longStart = -( Math.floor( longMax / m.GridDeltaAngl ) * m.GridDeltaAngl );
+        g.NewPoly3D();
+        for ( var long = longStart; long &lt; longMax; long += m.GridDeltaAngl ) {
+          g.AddPointToPoly3D( PointOnEarth( lat, long ) );
+        }
+        g.AddPointToPoly3D( PointOnEarth( lat, longMax ) );
+        g.DrawPoly3D( 1 );
+      }
+
+      // longitude lines
+      var longMax = m.HorizDropAnglFromEyeLvl;
+      var longStart = -( Math.floor( longMax / m.GridDeltaAngl ) * m.GridDeltaAngl );
+      for ( var long = longStart; long &lt; longMax; long += m.GridDeltaAngl ) {
+        var rLong = m.RefractedRadiusEarth * Math.cos( long );
+        var latMax = Math.acos( m.EarthCentrToHorizDisc / rLong );
+        var latStart = -( Math.floor( latMax / m.GridDeltaAngl ) * m.GridDeltaAngl );
+        g.NewPoly3D();
+        g.AddPointToPoly3D( PointOnEarth( -latMax, long ) );
+        for ( var lat = latStart; lat &lt; latMax; lat += m.GridDeltaAngl ) {
+          g.AddPointToPoly3D( PointOnEarth( lat, long ) );
+        }
+        g.AddPointToPoly3D( PointOnEarth( latMax, long ) );
+        g.DrawPoly3D( 1 );
+      }
+
+    } // end show globe grid
+
+    g.SetLineAttr( m.GlobeFGridCol, 1 );
+
+    // show flat grid
+    if ( m.showGrid &amp; 2 ) {
+
+      // latitude lines on flat model
+      var latMax = m.HorizDropAnglFromEyeLvl;
+      var latStart = -( Math.floor( latMax / m.GridDeltaAngl ) * m.GridDeltaAngl );
+      for ( var lat = latStart; lat &lt; latMax; lat += m.GridDeltaAngl ) {
+        var dLatPlaneDisk = m.EarthCentrToHorizDisc / Math.cos( lat );
+        var longMax = Math.acos( dLatPlaneDisk / m.RefractedRadiusEarth );
+        var longStart = -( Math.floor( longMax / m.GridDeltaAngl ) * m.GridDeltaAngl );
+        g.NewPoly3D();
+        for ( var long = longStart; long &lt; longMax; long += m.GridDeltaAngl ) {
+          g.AddPointToPoly3D( PointOnPlane( lat, long ) );
+        }
+        g.AddPointToPoly3D( PointOnPlane( lat, longMax ) );
+        g.DrawPoly3D( 1 );
+      }
+
+      // longitude lines on flat model
+      var longMax = m.HorizDropAnglFromEyeLvl;
+      var longStart = -( Math.floor( longMax / m.GridDeltaAngl ) * m.GridDeltaAngl );
+      for ( var long = longStart; long &lt; longMax; long += m.GridDeltaAngl ) {
+        var rLong = m.RefractedRadiusEarth * Math.cos( long );
+        var latMax = Math.acos( m.EarthCentrToHorizDisc / rLong );
+        var latStart = -( Math.floor( latMax / m.GridDeltaAngl ) * m.GridDeltaAngl );
+        g.NewPoly3D();
+        g.AddPointToPoly3D( PointOnPlane( -latMax, long ) );
+        for ( var lat = latStart; lat &lt; latMax; lat += m.GridDeltaAngl ) {
+          g.AddPointToPoly3D( PointOnPlane( lat, long ) );
+        }
+        g.AddPointToPoly3D( PointOnPlane( latMax, long ) );
+        g.DrawPoly3D( 1 );
+      }
+
+    } // end flat grid
+
+    if ( m.showGrid &amp; 2 ) {
+
+      // horizon on flat model
+      g.SetPlane( [ 0, 0, -m.Height ], [ 1, 0, 0 ], [ 0, 1, 0 ] );
+      g.SetAlpha( m.AlphaOpaque );
+      g.SetLineAttr( m.GlobeFGridCol, specialLineWidth );
+      g.CircleOnPlane( 0, 0, m.HorizDistOnEyeLvl, 1 );
+
+    }
+
+    // Globe Horizon
+    g.SetAlpha( m.AlphaOpaque );
+    g.SetLineAttr( m.GlobeGridCol, specialLineWidth );
+    g.SetPlane( [ 0, 0, -m.HorizDropFromEyeLvl ], [ 1, 0, 0 ], [ 0, 1, 0 ] );
+    g.CircleOnPlane( 0, 0, m.HorizDistOnEyeLvl, 1 );
+
+    // show tangent line to globe horizon
+    if ( m.showTangent || m.ShowDataHorizon || m.ShowLftRghtDrop ) {
+      g.SetLineAttr( m.TangentCol, 1 );
+      g.Line3D( JsgMat3.Trans( rotz, [ -2*m.SceneWidth, m.HorizDistOnEyeLvl, -m.HorizDropFromEyeLvl ] ), JsgMat3.Trans( rotz, [ 2*m.SceneWidth, m.HorizDistOnEyeLvl, -m.HorizDropFromEyeLvl ] ) );
+    }
+
+    // show left-right drop line
+    if ( m.ShowLftRghtDrop &amp;&amp; m.HorizLftRgtWidth &gt; 0) {
+      g.SetLineAttr( 'red', 1 );
+      g.Line3D( JsgMat3.Trans( rotz, [ -m.HorizLftRgtWidth/2, m.HorizLftRgtDist, -m.HorizDropFromEyeLvl ] ), JsgMat3.Trans( rotz, [ m.HorizLftRgtWidth/2, m.HorizLftRgtDist, -m.HorizDropFromEyeLvl ] ) );
+      g.SetMarkerAttr( 'ArrowUp', g.ScalePix(10), 'black', 'white', 1 );
+      g.Marker3D( JsgMat3.Trans( rotz, [ -m.HorizLftRgtWidth/2, m.HorizLftRgtDist, -m.HorizDropFromEyeLvl ] ) );
+      g.Marker3D( JsgMat3.Trans( rotz, [ m.HorizLftRgtWidth/2, m.HorizLftRgtDist, -m.HorizDropFromEyeLvl ] ) );
+    }
+
+    // draw all objects in the foreground
+    var drawObjIx = 1;
+    if (m.ObjSurfDist[0] &gt; m.ObjSurfDist[1]) drawObjIx = 0;
+    DrawObjectsBeforeHorizon( drawObjIx, g, true );
+    drawObjIx = (drawObjIx + 1) % 2;
+    DrawObjectsBeforeHorizon( drawObjIx, g, true );
+
+    // reset clipping
+    if (m.IsShowBothModels()) {
+      g.SetClipping( 'canvas' );
+    }
+
+  } // end model globe
+
+  if ( m.ShowTheodolite ) {
+    var xDir = JsgVect3.Mult( g.Camera.ViewDir, g.Camera.CamUp );
+    var yDir = JsgVect3.Mult( g.Camera.ViewDir, xDir );
+    var diag = Math.sqrt( m.SceneWidth*m.SceneWidth + m.SceneHeight*m.SceneHeight );
+    g.SetPlane( g.Camera.CamViewCenter, xDir, yDir, true );
+
+    // measurements
+    var numFormat = { Mode: 'fix0', Precision: 4, UsePrefix: false, Units: '' };
+
+    var txt = FormatAngle( m.TheodoliteTilt );
+    g.SetBgColor( 'white' );
+    g.SetTextAttr( 'Arial', 12, 'black', 'normal', 'normal', 'left', 'bottom', 5, 2 );
+    g.SetAlpha( 0.8 * m.AlphaOpaque );
+    g.Rect( g.GetTextBoxOnPlane( txt, 0.1*m.SceneWidth, 0 ), 2 );
+    g.SetAlpha( m.AlphaOpaque );
+    g.TextOnPlane( txt, 0.1*m.SceneWidth, 0 );
+
+    var txt = NumFormatter.NumToString( m.Pan, numFormat ) + '&#176;';
+    g.SetTextAttr( 'Arial', 12, 'black', 'normal', 'normal', 'left', 'top', 5, 2 );
+    g.SetAlpha( 0.8 * m.AlphaOpaque );
+    g.Rect( g.GetTextBoxOnPlane( txt, 0, -0.35*m.SceneHeight ), 2 );
+    g.SetAlpha( m.AlphaOpaque );
+    g.TextOnPlane( txt, 0, -0.35*m.SceneHeight );
+
+    // crosshair
+    g.SetAlpha( 0.8 * m.AlphaOpaque );
+    g.SetLineAttr( 'white', 3 );
+    g.LineOnPlane( -0.7*m.SceneWidth/2, 0, -0.05*m.SceneWidth/2, 0 );
+    g.LineOnPlane( 0.05*m.SceneWidth/2, 0, 0.7*m.SceneWidth/2, 0 );
+    g.LineOnPlane( 0, -0.7*m.SceneHeight/2, 0, -0.05*m.SceneHeight/2 );
+    g.LineOnPlane( 0, 0.7*m.SceneHeight/2, 0, 0.05*m.SceneHeight/2 );
+    g.SetAlpha( m.AlphaOpaque );
+    g.SetLineAttr( 'black', 1 );
+    g.LineOnPlane( -0.7*m.SceneWidth/2, 0, -0.02*m.SceneWidth/2, 0 );
+    g.LineOnPlane(  0.7*m.SceneWidth/2, 0,  0.02*m.SceneWidth/2, 0 );
+    g.LineOnPlane( 0, -0.7*m.SceneHeight/2, 0, -0.02*m.SceneHeight/2 );
+    g.LineOnPlane( 0,  0.7*m.SceneHeight/2, 0,  0.02*m.SceneHeight/2 );
+
+    // theodolite scope border
+    g.SetAreaAttr( 'gray', 'gray', 2 );
+    g.SetAlpha( 0.8 * m.AlphaOpaque );
+    g.OpenPath3D();
+    g.RectOnPlane( -diag, -diag, diag, diag );
+    g.CircleOnPlane( 0, 0, -0.35*diag );
+    g.Path3D( 3 );
+    g.SetAlpha( m.AlphaOpaque );
+  }
+
+  // label split screen
+  if (m.IsShowBothModels()) {
+    var oldTrans = g.SelectTrans( 'viewport' );
+    // label left
+    var txt = 'Flat Earth';
+    g.SetTextAttr( 'Arial', 16, 'black', 'bold', 'normal', 'left', 'top', 10 );
+    g.SetAreaAttr( 'yellow', 'white', 1 );
+    g.TextBox( txt, 0, 0, 3 );
+    g.Text( txt, 0, 0 );
+    // label right
+    var txt = 'Globe';
+    g.SetTextAttr( 'Arial', 16, 'black', 'bold', 'normal', 'right', 'top', 10 );
+    g.SetAreaAttr( 'yellow', 'white', 1 );
+    g.TextBox( txt, g.VpInnerWidth, 0, 3 );
+    g.Text( txt, g.VpInnerWidth, 0 );
+    // split line
+    g.SetLineAttr( '#ddd', 1 );
+    g.Line( g.VpInnerWidth/2, 0, g.VpInnerWidth/2, g.VpInnerHeight );
+    g.SelectTrans( oldTrans );
+  }
+
+  // draw frame
+  if (m.DeviceRatio != DeviceRatio_Off &amp;&amp; m.FrameCol != '') {
+    g.SetAlpha( m.AlphaOpaque );
+    g.SetLineAttr( m.FrameCol, 2 );
+    var xDir = JsgVect3.Mult( g.Camera.ViewDir, g.Camera.CamUp );
+    var yDir = JsgVect3.Mult( g.Camera.ViewDir, xDir );
+    g.SetPlane( g.Camera.CamViewCenter, xDir, yDir, true );
+    g.RectOnPlane( -m.SceneWidth/2, -m.SceneHeight/2, m.SceneWidth/2, m.SceneHeight/2, 1 );
+  }
+
+  var numFormat = {
+    Mode: 'std',
+    Precision: 4,
+    UsePrefix: false,
+    Units: '',
+  };
+
+  var numFormat4 = {
+    Mode: 'std',
+    Precision: 4,
+    UsePrefix: false,
+    Units: '',
+  };
+
+  // draw left-right drop data
+  var textSize = 14;
+  var lineHeight = g.ScalePix(21);
+  var tm = g.ScalePix(5); // text margin
+
+  if ( m.ShowLftRghtDrop &amp;&amp; m.IsShowGlobe() &amp;&amp; m.HorizLftRgtWidth &gt; 0) {
+    var posDropLine, align, offset;
+    posDropLine = JsgMat3.Trans( rotz, [ 0.46 * m.HorizLftRgtWidth, m.HorizLftRgtDist, -m.HorizDropFromEyeLvl ] );
+    align = 'right';
+    offset = g.ScalePix(40);
+
+    var posDropLineWin = g.VTransPoint3D( posDropLine );
+    var posDropLineVp = g.TransXY( posDropLineWin[0], posDropLineWin[1] );
+    var posDropLineX = posDropLineVp.x;
+    var posDropLineY = posDropLineVp.y - g.ScalePix(1);
+    var posTextX = posDropLineX + offset;
+    var posTextY = posDropLineY + g.ScalePix(30);
+    if (posTextX &lt; tm) posTextX = tm;
+    if (posTextX &gt; g.VpInnerWidth-tm) posTextX = g.VpInnerWidth-tm;
+
+    // show left-right drop data
+    g.SetTextAttr( 'Arial', textSize, 'black', 'normal', 'normal', align, 'bottom', 4 );
+    g.SetMarkerAttr( 'Arrow1', 6, 'black', 'black', 1 );
+    var oldTrans = g.SelectTrans( 'viewport' );
+
+    g.Arrow( posDropLineX, posTextY, posDropLineX, posDropLineY, 9 );
+    g.SetBgColor( 'white' );
+
+    var txt = 'Left-Right Drop Angle = ' + FormatAngle( m.HorizLftRgtDropAngl );
+    var ty = posTextY + lineHeight;
+    g.TextBox( txt, posTextX, ty, 2 );
+    g.Text( txt, posTextX, ty );
+
+    var txt = 'Left-Right Width Angle = ' + FormatAngle( m.HorizLftRgtWidthAngle );
+    ty += lineHeight;
+    g.TextBox( txt, posTextX, ty, 2 );
+    g.Text( txt, posTextX, ty );
+
+    var txt = 'Left-Right Drop = ' + NumFormatter.NumToString( HVal(m.HorizLftRgtDrop), numFormat ) + HUnit();
+    ty += lineHeight;
+    g.TextBox( txt, posTextX, ty, 2 );
+    g.Text( txt, posTextX, ty );
+
+    var txt = 'Left-Right Width = ' + NumFormatter.NumToString( LVal(m.HorizLftRgtWidth), numFormat ) + LUnit();
+    ty += lineHeight;
+    g.TextBox( txt, posTextX, ty, 2 );
+    g.Text( txt, posTextX, ty );
+
+    var txt = 'Apparent Radius = ' + NumFormatter.NumToString( LVal(m.RefractedRadiusEarth), numFormat ) + LUnit();
+    ty += lineHeight;
+    g.TextBox( txt, posTextX, ty, 2 );
+    g.Text( txt, posTextX, ty );
+
+    g.SelectTrans( oldTrans );
+  }
+
+  // draw data
+  if (m.showData &amp;&amp; m.IsShowGlobe()) {
+
+    var posHorizon, align, offset;
+    align = 'right';
+
+    if (m.ShowDataHorizon) {
+      posHorizon = JsgMat3.Trans( rotz, [ 0.44 * m.SceneWidth, m.HorizDistOnEyeLvl, -m.HorizDropFromEyeLvl ] );
+      offset = g.ScalePix(40);
+      var posHorizonWin = g.VTransPoint3D( posHorizon );
+      var posHorizonVp = g.TransXY( posHorizonWin[0], posHorizonWin[1] );
+      var posHorizonX = posHorizonVp.x;
+      var posHorizonY = posHorizonVp.y - g.ScalePix(2);
+      var posTextX = posHorizonX + offset;
+      var posTextY = posHorizonY - g.ScalePix(30);
+      if (posTextX &lt; tm) posTextX = tm;
+      if (posTextX &gt; g.VpInnerWidth-tm) posTextX = g.VpInnerWidth-tm;
+
+      // show horizon data
+      g.SetTextAttr( 'Arial', textSize, 'black', 'normal', 'normal', align, 'bottom', 4 );
+      g.SetMarkerAttr( 'Arrow1', 6, 'black', 'black', 1 );
+      var oldTrans = g.SelectTrans( 'viewport' );
+
+      g.Arrow( posHorizonX, posTextY, posHorizonX, posHorizonY, 9 );
+      g.SetBgColor( 'white' );
+
+      var txt = 'Grid Spacing = ' + NumFormatter.NumToString( LVal(m.GridSpacing), numFormat ) + LUnit();
+      var ty = posTextY;
+      g.TextBox( txt, posTextX, ty, 2 );
+      g.Text( txt, posTextX, ty );
+
+      var txt = 'Sagitta (Bulge) = ' + NumFormatter.NumToString( HVal(m.Bulge), numFormat ) + HUnit();
+      ty -= lineHeight;
+      g.TextBox( txt, posTextX, ty, 2 );
+      g.Text( txt, posTextX, ty );
+
+      var txt = 'Drop from Surface = ' + NumFormatter.NumToString( HVal(m.HorizDropFromObsSurf), numFormat ) + HUnit();
+      ty -= lineHeight;
+      g.TextBox( txt, posTextX, ty, 2 );
+      g.Text( txt, posTextX, ty );
+
+      var txt = 'Drop from Eye-Level = ' + NumFormatter.NumToString( HVal(m.HorizDropFromEyeLvl), numFormat ) + HUnit();
+      ty -= lineHeight;
+      g.TextBox( txt, posTextX, ty, 2 );
+      g.Text( txt, posTextX, ty );
+
+      var txt = 'Horizon Refr Angle = ' + FormatAngle( toDeg( m.HorizRefrAngle ) );
+      ty -= lineHeight;
+      g.TextBox( txt, posTextX, ty, 2 );
+      g.Text( txt, posTextX, ty );
+
+      var txt = 'Horizon Dip Angle = ' + FormatAngle( toDeg( m.HorizDropAnglFromEyeLvl ) );
+      ty -= lineHeight;
+      g.TextBox( txt, posTextX, ty, 2 );
+      g.Text( txt, posTextX, ty );
+
+      var txt = 'Distance on Surface = ' + NumFormatter.NumToString( LVal(m.HorizSurfDist), numFormat ) + LUnit();
+      ty -= lineHeight;
+      g.TextBox( txt, posTextX, ty, 2 );
+      g.Text( txt, posTextX, ty );
+
+      g.SelectTrans( oldTrans );
+    }
+
+    if (m.ShowDataObject &amp;&amp; m.NObjects[objIx] &gt; 0) {
+
+      // show object data
+      var oldTrans = g.SelectTrans( 'viewport' );
+
+      var ty = 1.25 * lineHeight;
+      var tx = tm;
+      var hAl = 'left';
+      if (m.IsShowBothModels()) {
+        tx += g.VpInnerWidth / 2;
+      }
+      g.SetTextAttr( 'Arial', textSize, 'black', 'normal', 'normal', hAl, 'bottom', 4 );
+      g.SetBgColor( 'white' );
+
+      var txt = 'Target ' + (m.NearObjIx+1) + ' Visible = ' + NumFormatter.NumToString( HVal(m.ObjVisi), numFormat4 ) + HUnit() + '; Hidden = ' + NumFormatter.NumToString( HVal(m.ObjHidden), numFormat4 ) + HUnit();
+      g.SetBgColor( '#ffddff' );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      var eq = ' = ';
+      var a = m.ObjSizeAngl;
+      if (a &lt; 1e-5) a = 0;
+      if (m.IsVariableSizeObject(objIx)) eq = ' &lt;= ';
+      var txt = 'Size ' + eq + NumFormatter.NumToString( HVal(m.ObjNearSize), numFormat4 ) + HUnit() + '; Angular Size = ' + FormatAngle( a );
+      g.SetBgColor( 'white' );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      var txt = 'Drop = ' + NumFormatter.NumToString( HVal(m.ObjDropFromObsSurf), numFormat ) + HUnit() + '; Drop Angle = ' + FormatAngle( m.ObjDropAnglFromObsSurf );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      var va = m.ObjTopAnglFromEyeLvl;
+      if (Math.abs(va) &lt; 1e-5) va = 0;
+      var txt = 'Top Angle = ' + FormatAngle( va ) + '; Tilt = ' + FormatAngle( m.ObjNearTilt );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      g.SelectTrans( oldTrans );
+
+    }
+
+    if (m.ShowDataRefraction &amp;&amp; m.NObjects[objIx] &gt; 0) {
+
+      var oldTrans = g.SelectTrans( 'viewport' );
+
+      // show refraction data
+      var ty = g.VpInnerHeight - 5.25 * lineHeight;
+      var tx = tm;
+      var hAl = 'left';
+      if (m.IsShowBothModels()) {
+        tx += g.VpInnerWidth / 2;
+      }
+      g.SetTextAttr( 'Arial', textSize, 'black', 'normal', 'normal', hAl, 'bottom', 4 );
+      g.SetBgColor( 'white' );
+
+      var txt = 'Target Lift rel to Horizon = ' + NumFormatter.NumToString( HVal(m.ObjLiftRelToHoriz), numFormat4 ) + HUnit();
+      g.SetBgColor( '#ffddff' );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      var txt = 'Target Lift Absolute = ' + NumFormatter.NumToString( HVal(m.ObjLiftAbs), numFormat4 ) + HUnit();
+      g.SetBgColor( 'white' );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      var txt = 'Horizon Lift = ' + NumFormatter.NumToString( HVal(m.HorizonLift), numFormat4 ) + HUnit();
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      g.SetTextColor( 'darkred' );
+      var txt = 'Target Refr Angle = ' + FormatAngle( m.ObjRefrAngl );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      g.SelectTrans( oldTrans );
+    }
+
+  }
+
+  if (m.showData &amp;&amp; m.IsShowFlatEarth()) {
+
+    var oldTrans = g.SelectTrans( 'viewport' );
+
+    if (m.ShowDataObject &amp;&amp; m.NObjects[objIx] &gt; 0) {
+
+      // show object data
+      var ty = 1.25 * lineHeight;
+      var tx = tm;
+      var hAl = 'left';
+      if (m.IsShowBothModels()) {
+        tx = g.VpInnerWidth / 2 - tm;
+        hAl = 'right';
+      }
+      g.SetTextAttr( 'Arial', textSize, 'black', 'normal', 'normal', hAl, 'bottom', 4 );
+      g.SetBgColor( 'white' );
+
+      var txt = 'Target ' + (m.NearObjIx+1) + ' Visible = ' + NumFormatter.NumToString( HVal(m.ObjSize[objIx]), numFormat4 ) + HUnit() + '; Hidden = ' + NumFormatter.NumToString( HVal(0), numFormat4 ) + HUnit();
+      g.SetBgColor( '#ffddff' );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      var eq = ' = ';
+      var a = m.ObjSizeAngl;
+      if (a &lt; 1e-5) a = 0;
+      if (m.IsVariableSizeObject(objIx)) eq = ' &lt;= ';
+      var txt = 'Size ' + eq + NumFormatter.NumToString( HVal(m.ObjNearSize), numFormat4 ) + HUnit() + '; Angular Size = ' + FormatAngle( a );
+      g.SetBgColor( 'white' );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+      var va = m.ObjTopAnglFromEyeLvlFE;
+      if (Math.abs(va) &lt; 1e-5) va = 0;
+      var txt = 'Top Angle = ' + FormatAngle( va );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+      ty += lineHeight;
+
+    }
+
+    g.SelectTrans( oldTrans );
+
+  }
+
+  // show refraction data
+
+  if (m.ShowDataRefraction &amp;&amp; m.IsShowGlobe() &amp;&amp; (Math.abs(m.RefractionCoeff) &gt; 0.001 || (m.showData &amp;&amp; m.NObjects[objIx] &gt; 0))) {
+
+    function refractionClass( k ) {
+      var r_class = '';
+      if (k &gt;= 0.78) {
+        r_class = 'extreme';
+      } else if (k &gt;= 0.58) {
+        r_class = 'severe';
+      } else if (k &gt;= 0.38) {
+        r_class = 'strong';
+      } else if (k &gt;= 0.18) {
+        r_class = 'medium';
+      } else if (k &gt;= 0.12) {
+        r_class = 'standard';
+      } else if (k &gt; 0.0001) {
+        r_class = 'weak';
+      } else if (k &lt; 0) {
+        r_class = 'negative';
+      }
+      if (r_class != '') r_class = '(' + r_class + ')';
+      return r_class;
+    }
+
+    function tempGradClass( dt ) {
+      var t_class = '';
+      if (dt &lt; -0.01) {
+        t_class = 'instable Layer';
+      } else {
+        t_class = 'stable Layer';
+      }
+      if (dt &gt; 0) {
+        t_class += '; Inversion';
+      }
+      if (t_class != '') t_class = '(' + t_class + ')';
+      return t_class;
+    }
+
+    var oldTrans = g.SelectTrans( 'viewport' );
+
+    var tx = tm;
+    var hAl = 'left';
+    if (m.IsShowBothModels()) {
+      tx += g.VpInnerWidth / 2;
+    }
+
+    g.SetTextAttr( 'Arial', textSize, 'darkred', 'normal', 'normal', hAl, 'bottom', 4 );
+    if (m.RefractionCoeff &lt; -1e-5) {
+      g.SetBgColor( '#ffeeaa' );
+    } else if (m.RefractionCoeff &gt; 1e-5) {
+      g.SetBgColor( '#ffff80' );
+    } else {
+      g.SetBgColor( 'white' );
+    }
+
+    var oldFormatMode = numFormat.Mode;
+    var oldPrecision = numFormat.Precision;
+    numFormat.Mode = 'fix0';
+
+    var ty = g.VpInnerHeight - lineHeight - g.ScalePix(5);
+    var txt = 'Refraction Coeff k = ' + NumFormatter.NumToString( m.RefractionCoeff, numFormat );
+    if (m.RefractionSync == 2) {
+      txt += ' (Standard Atmosphere)';
+    } else {
+      txt += ' ' + refractionClass( m.RefractionCoeff );
+    }
+    g.TextBox( txt, tx, ty, 2 );
+    g.Text( txt, tx, ty );
+
+    if (m.Height &lt; 84852) {
+      numFormat.Precision = 5;
+      var txt = '';
+      if (m.TemperatureGradient &lt; 1) {
+        txt = 'Temp. Gradient dT/dh = ' + NumFormatter.NumToString( AVal(m.TemperatureGradient), numFormat ) + AUnit()+ ' ';
+      }
+      ty += lineHeight;
+      txt += tempGradClass( m.TemperatureGradient );
+      g.TextBox( txt, tx, ty, 2 );
+      g.Text( txt, tx, ty );
+    }
+
+    numFormat.Mode = oldFormatMode;
+    numFormat.Precision = oldPrecision;
+
+    g.SelectTrans( oldTrans );
+  }
+
+  // draw overlay image
+  if (m.OverlayImage != '' &amp;&amp; m.OverlayImageAlpha &gt; 0) {
+    g.SetAlpha( m.OverlayImageAlpha );
+    var imgUrl = m.OverlayImage;
+    if (imgUrl.indexOf('http') != 0) imgUrl = MEDIA_FOLDER + imgUrl;
+    g.DrawImage( imgUrl, 'canvas-in' );
+    g.SetAlpha( m.AlphaOpaque )
+  }
+
+  // draw demo text and description
+  if (m.DemoText != '') {
+    var oldTrans = g.SelectTrans( 'viewport' );
+
+    g.SetTextAttr( 'Arial', 20, 'black', 'normal', 'normal', 'center', 'top', 10 );
+    g.SetBgColor( 'white' );
+
+    if (m.OverlayImage != '') {
+      g.TextBox( m.DemoText, g.VpInnerWidth/2, 0, 2 );
+    }
+    g.Text( m.DemoText, g.VpInnerWidth/2, 0 );
+
+    if (m.Description != '') {
+      g.SetTextAttr( 'Arial', 16, 'black', 'normal', 'normal', 'center', 'top', 10 );
+      if (m.OverlayImage != '') {
+        g.TextBox( m.Description, g.VpInnerWidth/2, g.ScalePix(30), 2 );
+      }
+      g.Text( m.Description, g.VpInnerWidth/2, g.ScalePix(30) );
+    }
+
+    g.SelectTrans( oldTrans );
+  }
+
+}
+
+function DrawObjectsBehindHorizon( objIx, g ) {
+  var m = CurveApp;
+
+  // init some loop variables used in DrawObjectsBeforeHorizon too
+  if (m.NObjects[objIx] == 0) return;
+  m.ObjDeltaAngl[objIx] = m.ObjDeltaDist[objIx] / m.RefractedRadiusEarth;
+  m.ObjFirstAngl[objIx] = m.ObjSurfDist[objIx] / m.RefractedRadiusEarth;
+  m.ObjLastAngl[objIx] = (m.NObjects[objIx]-1) * m.ObjDeltaAngl[objIx] + m.ObjFirstAngl[objIx];
+  m.MaxNObjectsToDraw[objIx] = m.NObjects[objIx];
+  m.NObjectsDrawn[objIx] = 0;
+  if (m.ObjLastAngl[objIx] &gt; Math.PI) {
+    m.MaxNObjectsToDraw[objIx] = Math.floor( Math.PI / m.ObjDeltaAngl[objIx] );
+    m.ObjLastAngl[objIx] = (m.MaxNObjectsToDraw[objIx]-1) * m.ObjDeltaAngl[objIx] + m.ObjFirstAngl[objIx];
+    m.NObjectsDrawn[objIx] = m.NObjects[objIx] - m.MaxNObjectsToDraw[objIx];
+  }
+  m.CurrentObjAngl[objIx] = m.ObjLastAngl[objIx];
+
+  // if only objects before horizon exist skip this function
+  var aSide = m.ObjSidePos[objIx] / m.RefractedRadiusEarth;
+  var sideOnDisk = (m.RefractedRadiusEarth - m.HorizDropFromObsSurf) * Math.tan( aSide );
+  var aClip = 0;
+  if (m.HorizDistOnEyeLvl &gt; Math.abs(sideOnDisk)) {
+    // not all objects are behind the horizon, so find the first object that is behind
+    var distOnDisk = Math.sqrt( m.HorizDistOnEyeLvl * m.HorizDistOnEyeLvl - sideOnDisk * sideOnDisk );
+    aClip = Math.asin( distOnDisk / m.RefractedRadiusEarth );
+  }
+  if (m.CurrentObjAngl[objIx] &lt;= aClip) return;
+  m.IsHiddenObj[objIx] = true;
+
+  // draw all objects behind horizon only and clip then at horizon
+  g.SetAlpha( m.AlphaOpaque );
+  g.SetAreaAttr( '#ffa', '#666', 1 );
+  g.SaveTrans3D();
+  var aLimit = m.ObjFirstAngl[objIx] - m.ObjDeltaAngl[objIx]/2;
+  while (m.CurrentObjAngl[objIx] &gt; aClip &amp;&amp; m.CurrentObjAngl[objIx] &gt; aLimit ) {
+    DrawShapeVariants( objIx, g, m, true );
+    m.NObjectsDrawn[objIx]++;
+    m.CurrentObjAngl[objIx] -= m.ObjDeltaAngl[objIx];
+  }
+  g.RestoreTrans3D();
+
+  // clip at horizon
+  if (m.NObjectsDrawn[objIx] &gt; 0) {
+    g.SetPlane( [0,0,-m.HorizDropFromEyeLvl], [1,0,0], [0,1,0] );
+    g.SetBgColor( 'white' );
+    g.CircleOnPlane( 0, 0, m.HorizDistOnEyeLvl, 2 );
+  }
+}
+
+function DrawObjectsBeforeHorizon( objIx, g, bOnGlobe ) {
+  var m = CurveApp;
+  if (m.NObjects[objIx] == 0) return;
+
+  // Init parameters for flat earth here, because DrawObjectsBehindHorizon is not caller in that case
+  if (!bOnGlobe) {
+    m.ObjDeltaAngl[objIx] = m.ObjDeltaDist[objIx] / m.RefractedRadiusEarth;
+    m.ObjFirstAngl[objIx] = m.ObjSurfDist[objIx] / m.RefractedRadiusEarth;
+    m.ObjLastAngl[objIx] = (m.NObjects[objIx]-1) * m.ObjDeltaAngl[objIx] + m.ObjFirstAngl[objIx];
+    m.MaxNObjectsToDraw[objIx] = m.NObjects[objIx];
+    m.CurrentObjAngl[objIx] = m.ObjLastAngl[objIx];
+    m.NObjectsDrawn[objIx] = 0;
+  }
+
+  var aLimit = m.ObjFirstAngl[objIx] - m.ObjDeltaAngl[objIx]/2;
+  if (m.CurrentObjAngl[objIx] &lt; aLimit) return;
+  m.IsHiddenObj[objIx] = false;
+
+  g.SetAlpha( m.AlphaOpaque );
+  g.SetAreaAttr( 'yellow', 'black', 1 );
+  g.SaveTrans3D();
+  while (m.CurrentObjAngl[objIx] &gt;= aLimit) {
+    DrawShapeVariants( objIx, g, m, bOnGlobe );
+    m.CurrentObjAngl[objIx] -= m.ObjDeltaAngl[objIx];
+    m.NObjectsDrawn[objIx]++;
+  }
+  g.RestoreTrans3D();
+}
+
+function SetTrans( objIx, g, m, lng, lat, size, alt, bOnGlobe ) {
+  var d = 0;
+  var s = 0;
+  var xs = m.IsShowBothModelsMirror() &amp;&amp; !bOnGlobe ? -m.ObjSize[objIx] : m.ObjSize[objIx];
+  g.ResetTrans3D();
+  g.TransScale3D( xs, m.ObjSize[objIx], m.ObjSize[objIx] );
+  g.TransMove3D( 0, 0, m.RefractedRadiusEarth+alt );
+  if (bOnGlobe) {
+    g.TransRotateY3D( lat );
+    g.TransRotateX3D( -lng );
+  } else {
+    d = lng * m.RefractedRadiusEarth;
+    s = lat * m.RefractedRadiusEarth;
+    if (m.IsShowBothModelsMirror()) s *= -1;
+  }
+  g.TransMove3D( s, d, -(m.RefractedRadiusEarth+m.Height) );
+}
+
+function DrawShapeVariants( objIx, g, m, bOnGlobe ) {
+
+  // size: 0 -&gt; lin, 1 -&gt; alt, 2 -&gt; rand, 3 -&gt; cos, 4 -&gt; sin
+
+  var size = 1;
+  var sizeType = m.ObjSizeType[objIx];
+  var objType = m.ObjType[objIx];
+
+  if (objType == 0) {
+    // M-Rod only scales linearly with size, size type is ignored and ObjSizeVar defines the scale size (num of divisions)
+
+  } else if (sizeType == 1) {
+    // lin
+    if (m.MaxNObjectsToDraw[objIx] &gt; 1) {
+      size = 1 + m.ObjSizeVar[objIx] * (2 / (m.MaxNObjectsToDraw[objIx] - 1) * (m.MaxNObjectsToDraw[objIx]-1 - m.NObjectsDrawn[objIx]) - 1);
+    }
+
+  } else if (sizeType == 1) {
+    // alt
+    size = 1 + m.ObjSizeVar[objIx] * Math.cos( Math.PI * m.NObjectsDrawn[objIx] );
+
+  } else if (sizeType == 2) {
+    // rand
+    size = 1 + m.ObjSizeVar[objIx] * ( (64894678.9798467 * Math.sqrt(m.NObjectsDrawn[objIx])) % 2 - 1 );
+
+  } else if (sizeType == 3) {
+    // cos
+    if (m.MaxNObjectsToDraw[objIx] &gt; 1) {
+      size = 1 - m.ObjSizeVar[objIx] * Math.cos( 2 * Math.PI * m.NObjectsDrawn[objIx]/(m.MaxNObjectsToDraw[objIx]-1) );
+    } else {
+      size = 1 + m.ObjSizeVar[objIx];
+    }
+
+  } else if (sizeType == 4) {
+    // sin
+    if (m.MaxNObjectsToDraw[objIx] &gt; 1) {
+      size = 1 - m.ObjSizeVar[objIx] * Math.sin( 2 * Math.PI * m.NObjectsDrawn[objIx]/(m.MaxNObjectsToDraw[objIx]-1) );
+    } else {
+      size = 1;
+    }
+  }
+
+  // make size varying from 0..1
+  size = (size + 1 - Math.abs(m.ObjSizeVar[objIx])) / 2;
+  if (size &lt; 0) size *= -1;
+
+  if (objType == 0) {
+    // dont scale M-Rod by sizeVar
+    size = 1;
+  }
+
+  var sizeHor = 1;
+  if (objType == 0) {
+    // M-Rod: scale width proportionaly
+    sizeHor = size;
+  }
+
+  var sideVar = m.ObjSideVar[objIx] / m.RefractedRadiusEarth / 2;
+  var side = m.ObjSidePos[objIx] / m.RefractedRadiusEarth;
+  var sideType = m.ObjSideType[objIx];
+  if (sideType == 0) {
+    // lin
+    if (m.MaxNObjectsToDraw[objIx] &gt; 1) {
+      sideVar *= (2 / (m.MaxNObjectsToDraw[objIx] - 1) * (m.MaxNObjectsToDraw[objIx]-1 - m.NObjectsDrawn[objIx]) - 1);
+    }
+
+    SetTrans( objIx, g, m, m.CurrentObjAngl[objIx], side+sideVar, m.ObjSize[objIx], 0, bOnGlobe );
+    g.SetPlane( [0,0,0], [sizeHor,0,0], [0,0,size] );
+    DrawShape( objIx, g, m, bOnGlobe );
+
+  } else if (sideType == 1) {
+    // 2col
+    var pos1 = side - sideVar;
+    var pos2 = side + sideVar;
+    if (Math.abs(pos1) &lt; Math.abs(pos2)) {
+      // invert drawing sequence
+      var tmp = pos1;
+      pos1 = pos2;
+      pos2 = tmp;
+    }
+    // assert: pos1 is farther to the side than pos2 -&gt; |pos1| &gt;= |pos2|
+    m.Col = 1;
+    g.SetPlane( [0,0,0], [sizeHor,0,0], [0,0,size] );
+    SetTrans( objIx, g, m, m.CurrentObjAngl[objIx], pos1, m.ObjSize[objIx], 0, bOnGlobe );
+    DrawShape( objIx, g, m, bOnGlobe );
+    m.Col = 2;
+    SetTrans( objIx, g, m, m.CurrentObjAngl[objIx], pos2, m.ObjSize[objIx], 0, bOnGlobe );
+    g.SetPlane( [0,0,0], [sizeHor,0,0], [0,0,size] );
+    DrawShape( objIx, g, m, bOnGlobe );
+
+  } else if (sideType == 2) {
+    // rand
+    sideVar *= (186573.6498496 * Math.sqrt(m.NObjectsDrawn[objIx]) % 2) - 1;
+    g.SetPlane( [0,0,0], [sizeHor,0,0], [0,0,size] );
+    SetTrans( objIx, g, m, m.CurrentObjAngl[objIx], side+sideVar, m.ObjSize[objIx], 0, bOnGlobe );
+    DrawShape( objIx, g, m, bOnGlobe );
+
+  } else if (sideType == 3) {
+    // cos
+    if (m.MaxNObjectsToDraw[objIx] &gt; 1) {
+      sideVar *= Math.cos( 2 * Math.PI * m.NObjectsDrawn[objIx]/(m.MaxNObjectsToDraw[objIx]-1) );
+    }
+    g.SetPlane( [side,0,0], [sizeHor,0,0], [0,0,size] );
+    SetTrans( objIx, g, m, m.CurrentObjAngl[objIx], side+sideVar, m.ObjSize[objIx], 0, bOnGlobe );
+    DrawShape( objIx, g, m, bOnGlobe );
+
+  } else if (sideType == 4) {
+    // sin
+    if (m.MaxNObjectsToDraw[objIx] &gt; 1) {
+      sideVar *= Math.sin( 2 * Math.PI * m.NObjectsDrawn[objIx]/(m.MaxNObjectsToDraw[objIx]-1) );
+    } else {
+      sideVar = 0;
+    }
+    g.SetPlane( [side,0,0], [sizeHor,0,0], [0,0,size] );
+    SetTrans( objIx, g, m, m.CurrentObjAngl[objIx], side+sideVar, m.ObjSize[objIx], 0, bOnGlobe );
+    DrawShape( objIx, g, m, bOnGlobe );
+
+  }
+}
+
+function DrawShape( objIx, g, m, bOnGlobe ) {
+  // plane and transformations are set
+
+  function setBgColor( normalColor, hiddenColor ) {
+    if (m.IsHiddenObj[objIx]) {
+      g.SetBgColor( hiddenColor );
+    } else {
+      g.SetBgColor( normalColor );
+    }
+  }
+
+  // ObjType: 0 = M-Rod, 1 = Mountain
+  var objType = m.ObjType[objIx];
+
+  if (objType == 0) {
+    // M-Rod
+    var sizeVar = m.GetObjectSizeVar( objIx );
+    setBgColor( 'yellow', '#ff4' );
+    g.RectOnPlane( -0.1, 0, 0.1, sizeVar, 2 );
+    setBgColor( 'red', '#f66' );
+    for (var z = 0.5; z &lt; sizeVar; z += 1) {
+      var t = z + 0.5;
+      if (t &gt; sizeVar) t = sizeVar;
+      g.RectOnPlane( -0.1, z, 0, t, 2 );
+    }
+    for (var z = 0.1; z &lt; sizeVar; z += 0.2 ) {
+      var t = z + 0.1;
+      if (t &gt; sizeVar) t = sizeVar;
+      g.RectOnPlane( 0, z, 0.1, t, 2 );
+    }
+    g.RectOnPlane( -0.1, 0, 0.1, sizeVar, 1 );
+
+    if (m.showData &amp;&amp; m.IsNearestObject(objIx)) {
+      // label object size
+      var x1 = 0.12;
+      var x2 = 0.22;
+      if (m.IsShowBothModelsMirror() &amp;&amp; !bOnGlobe) {
+        x1 = -0.12;
+        x2 = -0.22;
+      }
+      g.LineOnPlane( x1, sizeVar, x2, sizeVar );
+      g.SetTextAttr( 'Arial', 12, 'black', 'normal', 'normal', 'left', 'bottom', 0 );
+      var numFormat = { Mode: 'fix', Precision: 2, UsePrefix: false, Units: '' };
+      var txt = NumFormatter.NumToString( HVal(m.ObjSize[objIx]*sizeVar), numFormat ) + HUnit();
+      g.TextOnPlane( txt, x2, sizeVar );
+    }
+
+  } else if (objType == 1) {
+    // mountain
+    var mi = m.NObjectsDrawn[objIx] % 3;
+    var mr = m.NObjectsDrawn[objIx] % 6;
+    mi = (mi + objIx) % 3;
+    if (mr &gt; 2) {
+      // mirror x axes
+      g.Plane.XDir[0] *= -1;
+    }
+    if (mi == 0) {
+      setBgColor( '#dbe2ed', '#e9f0fc' );
+      g.PolygonOnPlane( [ -1.3, -0.8, -0.6, -0.3, -0.1, 0.1, 0.2, 0.4, 0.5, 0.6, 1.3, -1.3 ], [ 0, 0.6, 0.6, 1, 0.9, 0.7, 0.7, 0.9, 0.8, 0.85, 0, 0 ], 3 );
+      g.PolygonOnPlane( [ -0.3, 0, 0.3, 0.5, 0.8 ], [ 0.1, 0.2, 0.5, 0.5, 0.4 ], 1 );
+      g.PolygonOnPlane( [ -0.6, -0.3, 0.1 ], [ 0.6, 0.4, 0.3 ], 1 );
+      g.PolygonOnPlane( [ -0.2, -0.1, 0.1 ], [ 0.5, 0.6, 0.7 ], 1 );
+      g.PolygonOnPlane( [ 0.1, 0.2, 0.4, 0.5 ], [ 0.5, 0.6, 0.7, 0.8 ], 1 );
+
+    } else if (mi == 1) {
+      setBgColor( '#92aace', '#c4d2e8' );
+      g.PolygonOnPlane( [ -1.3, -0.8, -0.7, -0.2, 0.1, 0.2, 0.5, 0.6, 0.7, 1.3, -1.3 ], [ 0, 0.5, 0.5, 1, 0.8, 0.7, 0.7, 0.6, 0.6, 0, 0 ], 3 );
+      g.PolygonOnPlane( [ -0.7, -0.6, -0.3 ], [ 0.5, 0.5, 0.2 ], 1 );
+      g.LineOnPlane( 0.2, 0.7, 0.7, 0.2 );
+      g.LineOnPlane( 0.6, 0.6, 1.1, 0.1 );
+
+    } else {
+      setBgColor( '#abacb1', '#c8c9cf' );
+      g.PolygonOnPlane( [ -1.3, -0.7, -0.6, -0.3, -0.3, -0.2, -0.1, 0.1, 0.3, 0.5, 0.6, 0.8, 1, 1.1, 1.3, -1.3 ],  [ 0, 0.6, 0.6, 0.8, 0.9, 1, 1, 0.8, 0.5, 0.4, 0.5, 0.5, 0.4, 0.2, 0, 0 ], 3 );
+      g.PolygonOnPlane( [ -1, -0.6, -0.4, -0.2, 0 ], [ 0.1, 0.4, 0.5, 0.5, 0.3 ], 1 );
+      g.PolygonOnPlane( [ -0.6, -0.5, -0.4 ], [ 0.6, 0.6, 0.5 ], 1 );
+      g.PolygonOnPlane( [ -0.2, -0.1, 0 ], [ 1, 0.8, 0.4 ], 1 );
+      g.PolygonOnPlane( [ 0, 0.3, 0.6, 0.8, 0.9 ], [ 0.1, 0.2, 0.5, 0.4, 0.3 ], 1 );
+    }
+  }
+}
+
+function PointOnEarth( lat, long ) {
+  var x = CurveApp.RefractedRadiusEarth * Math.sin( long );
+  var rr = CurveApp.RefractedRadiusEarth * Math.cos( long );
+  var y = rr * Math.sin( lat );
+  var z = rr * Math.cos( lat );
+  return [ x, y, z - (CurveApp.RefractedRadiusEarth + CurveApp.Height) ];
+}
+
+function PointOnPlane( lat, long ) {
+  var x = CurveApp.RefractedRadiusEarth * Math.sin( long );
+  var rr = CurveApp.RefractedRadiusEarth * Math.cos( long );
+  var y = rr * Math.sin( lat );
+  return [ x, y, -CurveApp.Height ];
+}
+
+&lt;/jscript&gt;
+
+{{TabSelectorsTop| CurveSettingsTabs | MarginTop }}
+{{TabSel| Basics | BasicsTab }}
+{{TabSel| View | ViewsTab }}
+{{TabSel| Target 1 | Obj1Tab }}
+{{TabSel| Target 2 | Obj2Tab }}
+{{TabSel| Refraction&amp;rArr; | RefractionTab }}
+{{TabSelButton| Std | StdRefrButton }}
+{{TabSelButton| 0 | ZeroRefrButton }}
+{{TabSel| Units | UnitsTab }}
+{{TabSel| Save/Restore | SaveRestoreTab }}
+{{TabSelButton| Reset All | ResetButton }}
+{{EndTabSelectors}}
+
+{{TabBoxes| CurveSettingsTabs }} &lt;comment&gt; Basics Tab &lt;/comment&gt;
+
+{{scroll|600px}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewSliderPanel( {
+  Name: 'BasicsPanel',
+  ModelRef: 'CurveApp',
+  OnModelChange: UpdateAll,
+  Format: 'std',
+  Digits: DefaultDigits,
+  ReadOnly: false,
+  PanelFormat: 'InputMediumWidth'
+
+} ).AddValueSliderField( {
+  Name: 'Height',
+  Label: 'Observer Height',
+  ValueRef: 'Height',
+  SliderValueRef: 'HeightSlider',
+  UnitsData: 'HeightUnits',
+  Color: 'blue',
+  Min: 0,
+  Max: 1,
+  Inc: 0.1,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSurfDist',
+  Label: 'Target Distance',
+  ValueRef: 'ObjSurfDist[0]',
+  SliderValueRef: 'SliderObjSurfDistLog[0]',
+  UnitsData: 'LengthUnits',
+  Color: 'orange',
+  Min: 0,
+  Max: 5,
+  Inc: 100,
+
+} ).AddValueSliderField( {
+  Name: 'TargetSize',
+  Label: 'Target Size',
+  ValueRef: 'ObjSize[0]',
+  SliderValueRef: 'SliderObjSizeLog[0]',
+  UnitsData: 'HeightUnits',
+  Color: 'green',
+  Min: 0,
+  Max: 4,
+  Inc: 1,
+
+} ).AddValueSliderField( {
+  Name: 'Refraction',
+  ValueRef: 'RefractionCoeff',
+  SliderValueRef: 'RefractionSlider',
+  Color: 'red',
+  Min: -1,
+  Max: 1,
+  Inc: 0.01,
+
+} ).AddValueSliderField( {
+  Name: 'FocalLength',
+  ValueRef: 'FocalLengthField',
+  SliderValueRef: 'FocalLengthSlider',
+  Label: 'Zoom f',
+  Units: 'mm',
+  Color: 'black',
+  Min: 0,
+  Max: 1,
+  Inc: 1,
+
+} ).AddValueSliderField( {
+  Name: 'ViewAngle',
+  Label: 'Diagonal&amp;nbsp;FOV',
+  ValueRef: 'ViewAngleField',
+  SliderValueRef: 'ViewAngleSlider',
+  Units: '&#176;',
+  Color: 'black',
+  Min: 0.247517,
+  Max: 91.6,
+  Inc: 0.1,
+
+} ).Render();
+
+ControlPanels.NewPanel( {
+  Name: 'OptionsPanel',
+  ModelRef: 'CurveApp',
+  NCols: 2,
+  OnModelChange: UpdateAll
+
+} ).AddRadiobuttonField( {
+  Name: 'ShowModel',
+  Label: 'Model',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'Globe',
+      Value: 1
+    }, {
+      Name: 'FE',
+      Value: 2
+    }, {
+      Name: 'Globe+FE',
+      Value: 3
+    }
+  ]
+
+} ).AddRadiobuttonField( {
+  Name: 'ViewcenterHorizon',
+  Label: 'Camera Aim',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'Horizon',
+      Value: 0
+    }, {
+      Name: 'Eye-Level',
+      Value: 3
+    }
+  ]
+
+} ).AddCheckboxField( {
+  Name: 'ShowData',
+  Label: 'Show Data',
+  ColSpan: 3,
+  Items: [
+    {
+      Name: 'ShowDataObject',
+      Text: 'Object',
+    }, {
+      Name: 'ShowDataRefraction',
+      Text: 'Refr.',
+    }, {
+      Name: 'ShowDataHorizon',
+      Text: 'Horizon',
+    }, {
+      Name: 'ShowLftRghtDrop',
+      Text: 'Left-Right Drop',
+    }
+  ]
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+{{NextTabBox}} &lt;comment&gt; Views Tab &lt;/comment&gt;
+
+{{scroll|600px}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewSliderPanel( {
+  ModelRef: 'CurveApp',
+  OnModelChange: UpdateAll,
+  Format: 'std',
+  Digits: DefaultDigits,
+  ReadOnly: false,
+  PanelFormat: 'InputMediumWidth'
+
+} ).AddValueSliderField( {
+  Name: 'Height',
+  ValueRef: 'Height',
+  SliderValueRef: 'HeightSlider',
+  UnitsData: 'HeightUnits',
+  Color: 'blue',
+  Min: 0,
+  Max: 1,
+  Inc: 0.1,
+
+} ).AddValueSliderField( {
+  Name: 'FocalLength',
+  ValueRef: 'FocalLengthField',
+  SliderValueRef: 'FocalLengthSlider',
+  Label: 'Zoom f',
+  Units: 'mm',
+  Color: 'black',
+  Min: 0,
+  Max: 1,
+  Inc: 1,
+
+} ).AddValueSliderField( {
+  Name: 'ViewAngle',
+  Label: 'Diagonal&amp;nbsp;FOV',
+  ValueRef: 'ViewAngleField',
+  SliderValueRef: 'ViewAngleSlider',
+  Units: '&#176;',
+  Color: 'black',
+  Min: 0.82,
+  Max: 91.6,
+  Inc: 0.1,
+
+} ).AddValueSliderField( {
+  Name: 'Pan',
+  ValueRef: 'Pan',
+  SliderValueRef: 'PanSlider',
+  Format: 'std',
+  Digits: 5,
+  Units: '&#176;',
+  Color: 'green',
+  Min: -1,
+  Max: 1,
+  Inc: 0.1,
+
+} ).AddValueSliderField( {
+  Name: 'Tilt',
+  ValueRef: 'Tilt',
+  SliderValueRef: 'TiltSlider',
+  Format: 'std',
+  Digits: 5,
+  Units: '&#176;',
+  Color: 'green',
+  Min: -1,
+  Max: 1,
+  Inc: 0.1,
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+{{NextTabBox}} &lt;comment&gt; Objects-1 Tab &lt;/comment&gt;
+
+{{scroll|600px}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewSliderPanel( {
+  Name: 'Object-Sliders0',
+  ModelRef: 'CurveApp',
+  OnModelChange: UpdateAll,
+  Format: 'std',
+  Digits: DefaultDigits,
+  ReadOnly: false,
+  PanelFormat: 'InputMediumWidth'
+
+} ).AddValueSliderField( {
+  Name: 'NObjects',
+  ValueRef: 'NObjects[0]',
+  Label: 'NObjects',
+  Color: 'black',
+  Format: 'fix',
+  Digits: 0,
+  Min: 0,
+  Max: 200,
+  Steps: 200,
+  Inc: 1,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSurfDist',
+  Label: 'Dist',
+  ValueRef: 'ObjSurfDist[0]',
+  SliderValueRef: 'SliderObjSurfDistLog[0]',
+  UnitsData: 'LengthUnits',
+  Color: 'blue',
+  Min: 0,
+  Max: 5,
+  Inc: 100,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSize',
+  ValueRef: 'ObjSize[0]',
+  SliderValueRef: 'SliderObjSizeLog[0]',
+  UnitsData: 'HeightUnits',
+  Color: 'red',
+  Min: 0,
+  Max: 4,
+  Inc: 1,
+
+} ).AddValueSliderField( {
+  Name: 'ObjDeltaDist',
+  Label: 'DeltaDist',
+  ValueRef: 'ObjDeltaDist[0]',
+  SliderValueRef: 'SliderObjDeltaDistLog[0]',
+  UnitsData: 'LengthUnits',
+  Color: 'blue',
+  Min: 0,
+  Max: 4,
+  Inc: 10,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSidePos',
+  Label: 'SidePos',
+  ValueRef: 'ObjSidePos[0]',
+  SliderValueRef: 'SliderObjSidePosLog[0]',
+  UnitsData: 'LengthUnits',
+  Color: 'green',
+  Min: -3,
+  Max: 3,
+  Inc: 10,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSideVar',
+  Label: 'SideVar',
+  ValueRef: 'ObjSideVar[0]',
+  SliderValueRef: 'SliderObjSideVarLog[0]',
+  UnitsData: 'LengthUnits',
+  Color: 'green',
+  Min: -5,
+  Max: 5,
+  Inc: 10,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSizeVar',
+  ValueRef: 'ObjSizeVar[0]',
+  Label: 'SizeVar',
+  Units: '%',
+  Mult: 0.01,
+  Color: 'red',
+  Min: -1,
+  Max: 1,
+  Inc: 0.01,
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+&lt;style&gt;
+#Object-Sliders0 .Row6 { background-color: #dfd; }
+#Object-Sliders0 .Row7 { background-color: #fdd; }
+#Object-Options0 .Row2 { background-color: #dfd; }
+#Object-Options0 .Row2 .FieldGrid { background-color: #dfd; }
+#Object-Options0 .Row2 .FieldCell { border-color: #dfd; }
+#Object-Options0 .Row3 { background-color: #fdd; }
+#Object-Options0 .Row3 .FieldGrid { background-color: #fdd; }
+#Object-Options0 .Row3 .FieldCell { border-color: #fdd; }
+&lt;/style&gt;
+
+
+{{scroll}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewPanel( {
+  Name: 'Object-Options0',
+  ModelRef: 'CurveApp',
+  NCols: 1,
+  OnModelChange: UpdateAll
+
+} ).AddRadiobuttonField( {
+  Name: 'ObjType[0]',
+  Label: 'ObjType',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'M-Rod',
+      Value: 0
+    }, {
+      Name: 'Mountain',
+      Value: 1
+    }
+  ]
+
+} ).AddRadiobuttonField( {
+  Name: 'ObjSideType[0]',
+  Label: 'SideVar',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'Lin',
+      Value: 0
+    }, {
+      Name: '2-Col',
+      Value: 1
+    }, {
+      Name: 'Rand',
+      Value: 2
+    }, {
+      Name: 'Cos',
+      Value: 3
+    }, {
+      Name: 'Sin',
+      Value: 4
+    }
+  ]
+
+} ).AddRadiobuttonField( {
+  Name: 'ObjSizeType[0]',
+  Label: 'SizeVar',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'Lin',
+      Value: 1
+    }, {
+      Name: 'Rand',
+      Value: 2
+    }, {
+      Name: 'Cos',
+      Value: 3
+    }, {
+      Name: 'Sin',
+      Value: 4
+    }
+  ]
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+{{NextTabBox}} &lt;comment&gt; Objects-2 Tab &lt;/comment&gt;
+
+{{scroll|600px}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewSliderPanel( {
+  Name: 'Object-Sliders1',
+  ModelRef: 'CurveApp',
+  OnModelChange: UpdateAll,
+  Format: 'std',
+  Digits: DefaultDigits,
+  ReadOnly: false,
+  PanelFormat: 'InputMediumWidth'
+
+} ).AddValueSliderField( {
+  Name: 'NObjects',
+  ValueRef: 'NObjects[1]',
+  Label: 'NObjects',
+  Color: 'black',
+  Format: 'fix',
+  Digits: 0,
+  Min: 0,
+  Max: 200,
+  Steps: 200,
+  Inc: 1,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSurfDist',
+  Label: 'Dist',
+  ValueRef: 'ObjSurfDist[1]',
+  SliderValueRef: 'SliderObjSurfDistLog[1]',
+  UnitsData: 'LengthUnits',
+  Color: 'blue',
+  Min: 0,
+  Max: 5,
+  Inc: 100,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSize',
+  ValueRef: 'ObjSize[1]',
+  SliderValueRef: 'SliderObjSizeLog[1]',
+  UnitsData: 'HeightUnits',
+  Color: 'red',
+  Min: 0,
+  Max: 4,
+  Inc: 1,
+
+} ).AddValueSliderField( {
+  Name: 'ObjDeltaDist',
+  Label: 'DeltaDist',
+  ValueRef: 'ObjDeltaDist[1]',
+  SliderValueRef: 'SliderObjDeltaDistLog[1]',
+  UnitsData: 'LengthUnits',
+  Color: 'blue',
+  Min: 0,
+  Max: 4,
+  Inc: 10,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSidePos',
+  Label: 'SidePos',
+  ValueRef: 'ObjSidePos[1]',
+  SliderValueRef: 'SliderObjSidePosLog[1]',
+  UnitsData: 'LengthUnits',
+  Color: 'green',
+  Min: -3,
+  Max: 3,
+  Inc: 10,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSideVar',
+  Label: 'SideVar',
+  ValueRef: 'ObjSideVar[1]',
+  SliderValueRef: 'SliderObjSideVarLog[1]',
+  UnitsData: 'LengthUnits',
+  Color: 'green',
+  Min: -5,
+  Max: 5,
+  Inc: 10,
+
+} ).AddValueSliderField( {
+  Name: 'ObjSizeVar',
+  ValueRef: 'ObjSizeVar[1]',
+  Label: 'SizeVar',
+  Units: '%',
+  Mult: 0.01,
+  Color: 'red',
+  Min: -1,
+  Max: 1,
+  Inc: 0.01,
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+&lt;style&gt;
+#Object-Sliders1 .Row6 { background-color: #dfd; }
+#Object-Sliders1 .Row7 { background-color: #fdd; }
+#Object-Options1 .Row2 { background-color: #dfd; }
+#Object-Options1 .Row2 .FieldGrid { background-color: #dfd; }
+#Object-Options1 .Row2 .FieldCell { border-color: #dfd; }
+#Object-Options1 .Row3 { background-color: #fdd; }
+#Object-Options1 .Row3 .FieldGrid { background-color: #fdd; }
+#Object-Options1 .Row3 .FieldCell { border-color: #fdd; }
+&lt;/style&gt;
+
+
+{{scroll}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewPanel( {
+  Name: 'Object-Options1',
+  ModelRef: 'CurveApp',
+  NCols: 1,
+  OnModelChange: UpdateAll
+
+} ).AddRadiobuttonField( {
+  Name: 'ObjType[1]',
+  Label: 'ObjType',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'M-Rod',
+      Value: 0
+    }, {
+      Name: 'Mountain',
+      Value: 1
+    }
+  ]
+
+} ).AddRadiobuttonField( {
+  Name: 'ObjSideType[1]',
+  Label: 'SideVar',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'Lin',
+      Value: 0
+    }, {
+      Name: '2-Col',
+      Value: 1
+    }, {
+      Name: 'Rand',
+      Value: 2
+    }, {
+      Name: 'Cos',
+      Value: 3
+    }, {
+      Name: 'Sin',
+      Value: 4
+    }
+  ]
+
+} ).AddRadiobuttonField( {
+  Name: 'ObjSizeType[1]',
+  Label: 'SizeVar',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'Lin',
+      Value: 1
+    }, {
+      Name: 'Rand',
+      Value: 2
+    }, {
+      Name: 'Cos',
+      Value: 3
+    }, {
+      Name: 'Sin',
+      Value: 4
+    }
+  ]
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+{{NextTabBox}} &lt;comment&gt; Refraction Tab &lt;/comment&gt;
+
+{{scroll|600px}}
+
+&lt;jscript&gt;
+
+var BaroConst = {
+  hIx: 0,
+
+  // air level data of standard atmosphere model
+  hLimitTab: [
+    11000,
+    20000,
+    32000,
+    47000,
+    51000,
+    71000,
+    84852,
+        0
+  ],
+  hRefTab: [
+        0,
+    11000,
+    20000,
+    32000,
+    47000,
+    51000,
+    71000,
+    NaN
+  ],
+  alphaTab: [
+    -0.0065,
+     0,
+     0.001,
+     0.0028,
+     0,
+    -0.0028,
+    -0.002,
+    NaN
+  ],
+  TRefTab: [
+    288.15,
+    216.65,
+    216.65,
+    228.65,
+    270.65,
+    270.65,
+    214.65,
+    NaN
+  ],
+  rhoRefTab: [
+    1.225,
+    0.363918,
+    0.0880348,
+    0.013225,
+    0.00142753,
+    0.000861605,
+    0.000064211,
+    NaN
+  ],
+  pRefTab: [
+    101325,
+    22632.1,
+    5474.89,
+    868.019,
+    110.906,
+    66.9389,
+    3.95642,
+    NaN
+  ],
+
+  // some general constants
+  g:     9.80665,
+  R:     8.31446,
+  RS:    287.058,
+  kappa: 1.4,
+  M:     28.9644,
+
+  // private function
+  defIx:  function(i) { return xDefNum( i, this.hIx ); },
+
+  // set altitude range for following functions
+  SetAltRange: function( h ) {
+    for (var i = 0; i &lt; this.hLimitTab.length; i++) {
+      if (h &lt;= this.hLimitTab[i]) {
+        this.hIx = i;
+        return;
+      }
+    }
+    this.hIx = this.hLimitTab.length - 1;
+  },
+
+  // query level dependent constants
+  // default for i is this.hIx, see SetAltRange(h)
+  hRef:   function(i) { return this.hRefTab[this.defIx(i)]; },
+  alpha:  function(i) { return this.alphaTab[this.defIx(i)]; },
+  TRef:   function(i) { return this.TRefTab[this.defIx(i)]; },
+  rhoRef: function(i) { return this.rhoRefTab[this.defIx(i)]; },
+  pRef:   function(i) { return this.pRefTab[this.defIx(i)]; }
+
+};
+
+var ConvertUnit = {
+  ms_kt: function( v ) { return v * 1.944; },
+  kt_ms: function( v ) { return v / 1.944; },
+  ft_m:   function( h ) { return h * 0.3048; },
+  m_ft:   function( h ) { return h / 0.3048; },
+  K_C:    function( t ) { return t - 273.15; },
+  C_K:    function( t ) { return t + 273.15; },
+  K_F:    function( t ) { return t * 1.8 - 459.67; },
+  F_K:    function( t ) { return (t + 459.67) / 1.8; }
+}
+
+var BaroModel = {
+
+  h: -1,  // used for optimisation, CurveApp.Height is used instead,
+  T_C: 0,
+  T: 0,
+  p: 0,
+  rho: 0,
+  alpha: 0,
+
+  TempOfH: function( h ) {
+    return BaroConst.TRef() +
+      BaroConst.alpha() * (h - BaroConst.hRef());
+  },
+
+  PressureOfH: function( h ) {
+    var alpha = BaroConst.alpha();
+    if (alpha == 0) {
+      // isoterm
+      var hs = BaroConst.RS * BaroConst.TRef() / BaroConst.g;
+      var p = BaroConst.pRef() * Math.exp( -(h - BaroConst.hRef()) / hs );
+      return p;
+    } else {
+      var beta = BaroConst.g / BaroConst.RS / alpha;
+      var p = BaroConst.pRef() * Math.pow( 1 + alpha * (h - BaroConst.hRef()) / BaroConst.TRef(), -beta );
+      return p;
+    }
+  },
+
+  DensityOfH: function( h ) {
+    var alpha = BaroConst.alpha();
+    if (alpha == 0) {
+      // isoterm
+      var hs = BaroConst.RS * BaroConst.TRef() / BaroConst.g;
+      var r = BaroConst.rhoRef() * Math.exp( -(h - BaroConst.hRef()) / hs );
+      return r;
+    } else {
+      var beta = BaroConst.g / BaroConst.RS / alpha;
+      var r = BaroConst.rhoRef() * Math.pow( 1 + alpha * (h - BaroConst.hRef()) / BaroConst.TRef(), -beta-1 );
+      return r;
+    }
+  },
+
+  Update: function() {
+    if (this.h == CurveApp.Height) return;
+    BaroConst.SetAltRange( CurveApp.Height );
+    this.alpha = BaroConst.alpha();
+    this.T = this.TempOfH( CurveApp.Height );
+    this.T_C = this.T - 273.15;
+    this.p = this.PressureOfH( CurveApp.Height );
+    //this.rho = this.DensityOfH( CurveApp.Height );  not used
+    this.h = CurveApp.Height;
+  }
+
+};
+
+CurveApp.BaroModel = BaroModel;
+
+ControlPanels.NewPanel( {
+  Name: 'Refraction-Panel',
+  ModelRef: 'CurveApp',
+  OnModelChange: UpdateAll,
+  NCols: 2,
+  ReadOnly: false,
+  Format: 'std',
+  Digits: DefaultDigits
+
+} ).AddSliderField( {
+  Name: 'RefractionSlider',
+  Label: 'Refraction',
+  Color: 'red',
+  ColSpan: 3,
+  Min: -1,
+  Max: 1,
+
+} ).AddTextField( {
+  Name: 'RefractionCoeff',
+  Label: 'Coeff. k',
+  Inc: 0.01,
+
+} ).AddTextField( {
+  Name: 'TemperatureGradient',
+  Label: 'dT/dh',
+  UnitsData: 'GradientUnits',
+  Inc: 0.0001,
+
+} ).AddTextField( {
+  Name: 'RefractionFactor',
+  Label: 'Factor a',
+  Inc: 0.001,
+
+} ).AddTextField( {
+  Name: 'Temperature_C',
+  Label: 'Temp. T',
+  Units: '&#176;C',
+  Inc: 0.1,
+
+} ).AddTextField( {
+  Name: 'RefractedRadiusEarth',
+  Label: 'Radius R\'',
+  UnitsData: 'BigLengthUnits',
+  Inc: 100000,
+
+} ).AddTextField( {
+  Name: 'Pressure_mbar',
+  Label: 'Press. P',
+  Units: 'mbar',
+  Inc: 10,
+
+} ).AddRadiobuttonField( {
+  Name: 'RefractionSync',
+  Label: 'BaroLink',
+  ColSpan: 3,
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'off',
+      Value: 0
+    }, {
+      Name: 'T,P',
+      Value: 1
+    }, {
+      Name: 'Std-Atm',
+      Value: 2
+    }, {
+      Name: 'k=0.13',
+      Value: 3
+    }, {
+      Name: 'k=0.17',
+      Value: 4
+    }, {
+      Name: 'a=7/6',
+      Value: 5
+    }, {
+      Name: 'a=7/2',
+      Value: 6
+    }
+  ]
+} ).Render();
+
+ControlPanels.NewPanel( {
+  Name: 'RefractionBaro-Panel',
+  ModelRef: 'CurveApp',
+  OnModelChange: UpdateAll,
+  NCols: 2,
+  ReadOnly: true,
+  Format: 'std',
+  Digits: DefaultDigits
+
+} ).AddHeader( {
+  Text: 'Std-Atmosphere Barometer: use BaroLink = Std-Atm to link with Refraction',
+  ColSpan: 4,
+
+} ).AddSliderField( {
+  Name: 'HeightSlider',
+  Label: 'Height h',
+  Color: 'blue',
+  ColSpan: 3,
+  Min: 0,
+  Max: 1,
+
+} ).AddTextField( {
+  Name: 'Height',
+  Label: 'Height h',
+  UnitsData: 'HeightUnits',
+  ReadOnly: false,
+  Inc: 0.1,
+
+} ).AddTextField( {
+  Name: 'BaroModel.T_C',
+  Label: 'T(h)',
+  Units: '&#176;C',
+
+} ).AddTextField( {
+  Name: 'BaroModel.alpha',
+  Label: 'Td/dh(h)',
+  UnitsData: 'GradientUnits',
+
+} ).AddTextField( {
+  Name: 'BaroModel.p',
+  Label: 'P(h)',
+  Units: 'mbar',
+  Mult: 100,
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+Please read the paragraph on [[Finding the curvature of the Earth#Refraction|Refraction]] to get familiar with this panel.
+
+
+{{NextTabBox}} &lt;comment&gt; Units-Calculator Tab &lt;/comment&gt;
+
+&lt;jscript&gt;
+
+function CLengthModel() {
+  this.m = 0;
+  this.km = 0;
+  this.sm = 0;
+  this.mile = 0;
+  this.in = 0;
+  this.cm = 0;
+  this.ft = 0;
+  this.fl = 0;
+  this.mLast = 0;
+  this.kmLast = 0;
+  this.smLast = 0;
+  this.mileLast = 0;
+  this.inLast = 0;
+  this.cmLast = 0;
+  this.ftLast = 0;
+  this.flLast = 0;
+}
+
+CLengthModel.prototype.calcOthersFromMeter = function() {
+  this.km = this.m / 1000;
+  this.sm = this.m / 1852;
+  this.mile = this.m / 1609.344;
+  this.in = this.m / 0.0254;
+  this.cm = this.m * 100;
+  this.ft = this.m / 0.3048;
+  this.fl = this.ft / 100;
+}
+
+CLengthModel.prototype.Update = function() {
+  if (this.m != this.mLast) {
+    this.calcOthersFromMeter();
+  }
+  else if (this.km != this.kmLast) {
+    this.m = this.km * 1000;
+    this.calcOthersFromMeter();
+  }
+  else if (this.sm != this.smLast) {
+    this.m = this.sm * 1852;
+    this.calcOthersFromMeter();
+  }
+  else if (this.mile != this.mileLast) {
+    this.m = this.mile * 1609.344;
+    this.calcOthersFromMeter();
+  }
+  else if (this.in != this.inLast) {
+    this.m = this.in * 0.0254;
+    this.calcOthersFromMeter();
+  }
+  else if (this.cm != this.cmLast) {
+    this.m  = this.cm / 100;
+    this.calcOthersFromMeter();
+  }
+  else if (this.ft != this.ftLast) {
+    this.m = this.ft * 0.3048;
+    this.calcOthersFromMeter();
+  }
+  else if (this.fl != this.flLast) {
+    this.m = this.fl * 100 * 0.3048;
+    this.calcOthersFromMeter();
+  }
+  this.mLast = this.m;
+  this.kmLast = this.km;
+  this.smLast = this.sm;
+  this.mileLast = this.mile;
+  this.inLast = this.in;
+  this.cmLast = this.cm;
+  this.ftLast = this.ft;
+  this.flLast = this.fl;
+}
+
+var LengthModel = new CLengthModel();
+
+function UpdateLengthModel() {
+  LengthModel.Update();
+  ControlPanels.Update( 'Units-Calculator' );
+}
+
+xOnLoad( UpdateLengthModel );
+
+&lt;/jscript&gt;
+
+{{scroll}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewPanel( {
+    Name: 'Units-Calculator',
+    ModelRef: 'LengthModel',
+    OnModelChange: UpdateLengthModel,
+    NCols: 2,
+    Format: 'std',
+    Digits: 10
+  }
+
+).AddTextField( {
+    Name: 'm',
+    Label: 'Meter',
+    Units: 'm',
+    Inc: 1,
+  }
+
+).AddTextField( {
+    Name: 'km',
+    Label: 'Kilometer',
+    Units: 'km',
+    Inc: 1,
+  }
+
+).AddTextField( {
+    Name: 'sm',
+    Label: 'Nautical Mile',
+    Units: 'nmi',
+    Inc: 1,
+  }
+
+).AddTextField( {
+    Name: 'mile',
+    Label: 'Statute Mile',
+    Units: 'mi',
+    Inc: 1,
+  }
+
+).AddTextField( {
+    Name: 'in',
+    Label: 'Inch',
+    Units: 'in',
+    Inc: 1,
+  }
+
+).AddTextField( {
+    Name: 'cm',
+    Label: 'Centimeter',
+    Units: 'cm',
+    Inc: 1,
+  }
+
+).AddTextField( {
+    Name: 'ft',
+    Label: 'Feet',
+    Units: 'ft',
+    Inc: 1,
+  }
+
+).AddTextField( {
+    Name: 'fl',
+    Label: 'Flight Level FL',
+    Units: '',
+    Inc: 10,
+  }
+
+).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+Use this Formular to convert between different lengh units. You can Copy/Paste the results into input fields in the other Forms.
+
+{{NextTabBox}} &lt;comment&gt; Save/Restore Tab &lt;/comment&gt;
+
+{{form textarea|SaveRestorePanel|8|spellcheck=false|class=ListingDisplay|}}
+
+&lt;comment&gt;
+[javascript:void DataX.GetAppStateUrl(ThisPageUrl)|{{ButtonText|Get App Url|blue}}]
+[javascript:void DataX.GetAppState()|{{ButtonText|Get App State|blue}}]
+[javascript:void DataX.SetAppState()|{{ButtonText|Set App State|green}}]
+[javascript:void DataX.CompactSaveRestoreDomObj()|{{ButtonText|Compact App State|red}}]
+[javascript:void DataX.ClearSaveRestoreDomObj()|{{ButtonText|Clear|red}}]
+&lt;/comment&gt;
+
+[javascript:void DataX.GetAppStateUrl(ThisPageUrl)|{{ButtonText|Get App Url|blue}}]
+[javascript:void DataX.SetAppState()|{{ButtonText|Set App State|green}}]
+[javascript:void DataX.ClearSaveRestoreDomObj()|{{ButtonText|Clear|red}}]
+
+Use '''Get App Url''' to get an URL containing the current App State. Click '''Set App State''' oder copy the URL into any browser address field to go to this page and display the current App State.
+
+&lt;jscript&gt;
+
+function ResetApp() {
+  DataX.SetAppState(
+    'AdvCurveApp = { &quot;DemoText&quot;: &quot;&quot;, &quot;Description&quot;: &quot;&quot;, &quot;Height&quot;: 2, &quot;FocalLengthField&quot;: 3000, &quot;ShowModel&quot;: 1, &quot;DeviceRatio&quot;: 1.5, &quot;ViewcenterHorizon&quot;: 0, &quot;ObjType&quot;: [ 0, 0 ], &quot;NObjects&quot;: [ 1, 0 ], &quot;ObjSurfDist&quot;: [ 12000, 20000 ], &quot;ObjDeltaDist&quot;: [ 300, 300 ], &quot;ObjSideType&quot;: [ 0, 0 ], &quot;ObjSidePos&quot;: [ 0, 0 ], &quot;ObjSideVar&quot;: [ 0, 0 ], &quot;ObjSizeType&quot;: [ 1, 1 ], &quot;ObjSize&quot;: [ 10, 10 ], &quot;ObjSizeVar&quot;: [ 0, 0 ], &quot;RefractionCoeff&quot;: 0, &quot;TemperatureGradient&quot;: -0.0343, &quot;RefractionSync&quot;: 0, &quot;Pressure_mbar&quot;: 1013.25, &quot;Temperature_C&quot;: 15, &quot;RefractionFactMin&quot;: 0.5, &quot;RefractionFactMax&quot;: 10000, &quot;RadiusEarth&quot;: 6371000, &quot;EquatorRadiusFE&quot;: 10007543, &quot;ShowTheodolite&quot;: false, &quot;OverlayImage&quot;: &quot;&quot;, &quot;OverlayImageAlpha&quot;: 0.5 }' );
+}
+
+function SetStdRefraction() {
+  CurveApp.RefractionSync = 2;
+  UpdateAll();
+}
+
+function Set0Refraction() {
+  CurveApp.RefractionSync = 1;
+  CurveApp.RefractionCoeff = 0;
+  UpdateAll();
+}
+
+function HandleUrlCommands() {
+
+  var dataStr = DataX.GetUrlStr( 'tab' );
+  if (dataStr != '') {
+    if (dataStr == 'View') {
+      Tabs.Select( 'CurveSettingsTabs', 0 );
+    } else if (dataStr == 'Obj1') {
+      Tabs.Select( 'CurveSettingsTabs', 1 );
+    } else if (dataStr == 'Obj2') {
+      Tabs.Select( 'CurveSettingsTabs', 2 );
+    } else if (dataStr == 'Refr') {
+      Tabs.Select( 'CurveSettingsTabs', 3 );
+    } else if (dataStr == 'Unit') {
+      Tabs.Select( 'CurveSettingsTabs', 4 );
+    } else if (dataStr == 'SaveRest') {
+      Tabs.Select( 'CurveSettingsTabs', 5 );
+    }
+  }
+
+  Animations.TimeStrech = 1 / DataX.GetUrlNum( 'speed', 1 );
+  if (Animations.TimeStrech &lt; 0.01) Animations.TimeStrech = 0.01;
+  if (Animations.TimeStrech &gt; 100) Animations.TimeStrech = 100;
+
+}
+
+&lt;/jscript&gt;
+
+{{EndTabBoxes}}
+
+{{scroll}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewPanel( {
+  Name: 'UnitsPanel',
+  ModelRef: 'CurveApp',
+  NCols: 2,
+  OnModelChange: UpdateAll
+
+} ).AddRadiobuttonField( {
+  Name: 'UnitsType',
+  Label: 'Units',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'm (Metric)',
+      Value: 0
+    }, {
+      Name: 'mi/ft (Imp)',
+      Value: 1
+    }, {
+      Name: 'ft/ft (Imp)',
+      Value: 2
+    }
+  ]
+
+} ).AddRadiobuttonField( {
+  Name: 'AngleFormat',
+  Label: 'AngleFormat',
+  ValueType: 'int',
+  Items: [
+    {
+      Name: 'deg.',
+      Value: 0
+    }, {
+      Name: 'DM',
+      Value: 1
+    }, {
+      Name: 'DMS',
+      Value: 2
+    }
+  ]
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+{{scroll}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewPanel( {
+  Name: 'TargetDataPanel',
+  ModelRef: 'CurveApp',
+  OnModelChange: UpdateAll,
+  NCols: 2,
+  ReadOnly: true,
+  Format: 'std',
+  Digits: DefaultDigits
+
+} ).AddHeader( {
+  Text: 'Nearest Target Data',
+  ColSpan: 4,
+
+} ).AddTextField( {
+  Name: 'ObjVisi',
+  Label: 'Visible',
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'ObjHidden',
+  Label: 'Hidden',
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'ObjVisibleAngl',
+  Label: 'Visible Angle',
+  ReadOnly: true,
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'ObjHiddenAngl',
+  Label: 'Hidden Angle',
+  ReadOnly: true,
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'ObjDropFromObsSurf',
+  Label: 'Drop&lt;sup&gt;*&lt;/sup&gt;',
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'ObjDropAnglFromObsSurf',
+  Label: 'Drop Angle&lt;sup&gt;*&lt;/sup&gt;',
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'ObjSizeAngl',
+  Label: 'Angular Size',
+  ReadOnly: true,
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'ObjRefrAngl',
+  Label: 'Refraction Angle',
+  ReadOnly: true,
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'ObjLiftAbs',
+  Label: 'Lift Absolute',
+  ReadOnly: true,
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'ObjLiftRelToHoriz',
+  Label: 'Relative to Horizon',
+  ReadOnly: true,
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'ObjTopAnglFromEyeLvl',
+  Label: 'Target Top Angle',
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'ObjTopAnglFromEyeLvlFE',
+  Label: 'Target Top Angle FE',
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'ObjNearTilt',
+  Label: 'Tilt&lt;sup&gt;*&lt;/sup&gt;',
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'Bulge',
+  Label: 'Sagitta (Bulge)&lt;sup&gt;*&lt;/sup&gt;',
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'LineOfSightClearing',
+  Label: 'LoS Clearing',
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'LineOfSightClearingRefracted',
+  Label: 'Refr. LoS Clearing',
+  UnitsData: 'HeightUnits',
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+{{scroll}}
+
+&lt;jscript&gt;
+
+ControlPanels.NewPanel( {
+  Name: 'HorizonDataPanel',
+  ModelRef: 'CurveApp',
+  OnModelChange: UpdateAll,
+  NCols: 2,
+  ReadOnly: true,
+  Format: 'std',
+  Digits: DefaultDigits
+
+} ).AddHeader( {
+  Text: 'Horizon Data',
+  ColSpan: 4,
+
+} ).AddTextField( {
+  Name: 'HorizDropAnglFromEyeLvl',
+  Label: 'Dip Angle',
+  Mult: Math.PI / 180,
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'HorizRefrAngle',
+  Label: 'Refraction Angle',
+  Mult: Math.PI / 180,
+  UnitsData: 'AngleFormats',
+
+} ).AddTextField( {
+  Name: 'HorizSurfDist',
+  Label: 'Dist on Surf',
+  UnitsData: 'LengthUnits',
+
+} ).AddTextField( {
+  Name: 'GridSpacing',
+  Label: 'Grid Spacing',
+  UnitsData: 'LengthUnits',
+
+} ).AddTextField( {
+  Name: 'HorizDistLineOfSight',
+  Label: 'Dist from Eye',
+  UnitsData: 'LengthUnits',
+
+} ).AddTextField( {
+  Name: 'HorizDistOnEyeLvl',
+  Label: 'Dist on Eye-Lvl',
+  UnitsData: 'LengthUnits',
+
+} ).AddTextField( {
+  Name: 'HorizDropFromObsSurf',
+  Label: 'Drop',
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'HorizDropFromEyeLvl',
+  Label: 'Drop from Eye-Lvl',
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'HorizLftRgtWidth',
+  Label: 'Left-Right Width',
+  UnitsData: 'LengthUnits',
+
+} ).AddTextField( {
+  Name: 'SceneWidth',
+  Label: 'Frame Width',
+  UnitsData: 'LengthUnits',
+
+} ).AddTextField( {
+  Name: 'HorizLftRgtDrop',
+  Label: 'Left-Right Drop',
+  UnitsData: 'HeightUnits',
+
+} ).AddTextField( {
+  Name: 'HorizLftRgtDropAngl',
+  Label: 'Left-Right Drop Angle',
+  UnitsData: 'AngleFormats'
+
+} ).AddTextField( {
+  Name: 'RadiusEarth',
+  Label: 'Radius Earth',
+  UnitsData: 'BigLengthUnits',
+  ReadOnly: false
+
+} ).AddTextField( {
+  Name: 'RefractedRadiusEarth',
+  Label: 'Apparent Radius',
+  UnitsData: 'LengthUnits',
+
+} ).Render();
+
+&lt;/jscript&gt;
+
+{{end scroll}}
+
+
+
+</pre>
+
+
+
+<!-- wiki page ends here -->
+</div>
+</div>
+
+</div>
+<div class="layoutCol25" id="Layout-SidebarPart">
+<div class="sidebarItems" id="Layout-SidebarItems">
+<div class="sidebarItem" id="FirstSbItem">
+<h3>Blog-Functions</h3>
+<ul class="WikiSidebarDir">
+<li><a href="index.asp?">Blog Home</a></li>
+<li><a href="index.asp?blog=list">All Articles</a></li>
+<li><a href="index.asp?blog=allnews">Last Changes</a></li>
+<li><a href="index.asp?blog=news">New Comments</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="footerSection pageSection" id="Layout-FooterSection">
+<div class="pageFrame" id="Layout-FooterFrame">
+<div class="pageRow100">
+<div class="footerCol">
+<table class="pageInfos"><tr>
+<td class="label">About</td>
+<td class="val"><a href="../index.asp?page=Walter+Bislin">Walter Bislin (wabis)</a></td>
+</tr><tr>
+<td class="label">Rights</td>
+<td class="val"><a href="../index.asp?page=Public+Domain">Public Domain</a></td>
+</tr></table>
+</div>
+<div class="footerCol">
+<table class="pageInfos"><tr>
+<td class="label">More</td>
+<td class="val"><a href="index.asp?page=Source+Code%3A+Advanced+Earth+Curvature+Calculator&amp;op=exe&amp;fn=Page%20Infos" rel="nofollow">Page Infos</a> / <a href="../index.asp?page=Sitemap">Sitemap</a></td>
+</tr><tr>
+<td class="label">Created</td>
+<td class="val">Friday, June 22, 2018</td>
+</tr></table>
+</div>
+<div class="footerCol">
+<table class="pageInfos"><tr>
+<td class="label">Scroll to</td>
+<td class="val"><a href="#">Top of Page</a></td>
+</tr><tr>
+<td class="label">Changed</td>
+<td class="val">Sunday, November 25, 2018</td>
+</tr></table>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+</html>
+
