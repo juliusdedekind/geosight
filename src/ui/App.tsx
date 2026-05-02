@@ -18,7 +18,7 @@ export function App() {
         <header className="app-header">
           <div>
             <p className="eyebrow">Local port</p>
-            <h1>Advanced Earth Curvature Calculator</h1>
+            <h1>GeoSight: Earth Curvature and Horizon Simulator</h1>
           </div>
           <button type="button" onClick={() => setStateText(exportState())}>
             Export State
