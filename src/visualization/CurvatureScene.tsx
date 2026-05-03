@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { type CurveInputs, type CurveOutputs } from "../core/curvatureModel";
 import { formatAngle, formatHeight, formatLength, formatNumber } from "../core/units";
 import { useCurveStore } from "../state/curveStore";
-import { computeCamera, JsgLikeCamera, screenMapper, worldPointOnEarth, worldPointOnPlane, type Vec2, type Vec3 } from "./jsgProjection";
+import { computeCamera, flatHorizonDistance, JsgLikeCamera, screenMapper, worldPointOnEarth, worldPointOnPlane, type Vec2, type Vec3 } from "./jsgProjection";
 
 export function CurvatureScene() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -140,7 +140,7 @@ function drawModelPanel(
   ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
   ctx.clip();
 
-  const camera = new JsgLikeCamera(computeCamera(inputs, outputs));
+  const camera = new JsgLikeCamera(computeCamera(inputs, outputs, kind === "flat" ? "flatHorizon" : "input"));
   const map = screenMapper(viewport.width, viewport.height, viewport);
   const project = (point: Vec3) => {
     const projected = camera.project(point);
@@ -158,7 +158,7 @@ function drawModelPanel(
   }
 
   drawProjectedEyeLevel(ctx, outputs, project, viewport);
-  drawHorizonMarkers(ctx, viewport, projectedHorizonY(outputs, inputs.height, project, viewport.height));
+  drawHorizonMarkers(ctx, viewport, projectedHorizonY(outputs, inputs.height, project, viewport.height, kind));
   drawProjectedTargets(ctx, inputs, outputs, project, viewport, kind === "flat" ? "flat" : "globe");
 
   if (viewport.x > 0 || kind !== "both") drawPanelLabel(ctx, viewport, kind === "flat" ? "Flat Earth" : kind === "globe" ? "Globe" : "");
@@ -210,10 +210,11 @@ function drawProjectedFlatProjection(
   ctx.save();
   ctx.strokeStyle = "rgba(220, 38, 38, 0.8)";
   ctx.lineWidth = 1.5;
-  const sideMax = outputs.horizonDistanceOnEyeLevel * 0.9;
+  const horizonDistance = flatHorizonDistance(outputs);
+  const sideMax = horizonDistance * 0.9;
   const points: Vec2[] = [];
   for (let side = -sideMax; side <= sideMax; side += sideMax / 64) {
-    const point = project(worldPointOnPlane(outputs.horizonSurfaceDistance, side, 0, inputs.height));
+    const point = project(worldPointOnPlane(horizonDistance, side, 0, inputs.height));
     if (point) points.push(point);
   }
   drawPolyline(ctx, points);
@@ -262,7 +263,7 @@ function drawProjectedGlobeHorizon(
   ctx.save();
   ctx.strokeStyle = "#000000";
   ctx.lineWidth = 1.5;
-  const tangentY = projectedHorizonY(outputs, inputs.height, project, 0);
+  const tangentY = projectedHorizonY(outputs, inputs.height, project, 0, "globe");
   ctx.beginPath();
   ctx.moveTo(viewport.x, tangentY);
   ctx.lineTo(viewport.x + viewport.width, tangentY);
@@ -428,8 +429,12 @@ function drawPolyline(ctx: CanvasRenderingContext2D, points: Vec2[]) {
   ctx.stroke();
 }
 
-function projectedHorizonY(outputs: CurveOutputs, observerHeight: number, project: (point: Vec3) => Vec2 | null, fallbackHeight: number) {
-  const p = project(worldPointOnEarth(outputs, observerHeight, outputs.horizonSurfaceDistance, 0, 0));
+function projectedHorizonY(outputs: CurveOutputs, observerHeight: number, project: (point: Vec3) => Vec2 | null, fallbackHeight: number, kind: ModelKind) {
+  const point =
+    kind === "flat"
+      ? worldPointOnPlane(flatHorizonDistance(outputs), 0, 0, observerHeight)
+      : worldPointOnEarth(outputs, observerHeight, outputs.horizonSurfaceDistance, 0, 0);
+  const p = project(point);
   return p ? p[1] : fallbackHeight * 0.58;
 }
 

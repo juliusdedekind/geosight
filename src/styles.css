@@ -55,13 +55,19 @@ button:hover {
 }
 
 .app-header {
-  align-items: center;
+  align-items: flex-start;
   border-bottom: 1px solid #e3e7ee;
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   justify-content: space-between;
   margin-bottom: 14px;
   padding-bottom: 14px;
+}
+
+.app-header button {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .eyebrow {
@@ -171,6 +177,19 @@ textarea {
   resize: vertical;
 }
 
+.state-status {
+  font-size: 13px;
+  margin: 8px 0 0;
+}
+
+.state-status.success {
+  color: #166534;
+}
+
+.state-status.error {
+  color: #991b1b;
+}
+
 .scene-wrap {
   height: 100%;
   min-height: 68vh;
@@ -267,6 +286,29 @@ textarea {
   max-width: 1180px;
 }
 
+@media (min-width: 1100px) {
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 430px);
+    height: 100vh;
+    min-height: 0;
+  }
+
+  .scene-region {
+    border-bottom: 0;
+    min-height: 0;
+  }
+
+  .scene-wrap {
+    min-height: 0;
+  }
+
+  .control-region {
+    border-left: 1px solid #d7dce5;
+    height: 100vh;
+    overflow: auto;
+  }
+}
+
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -287,5 +329,45 @@ textarea {
 
   .note-left-right {
     display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .scene-note {
+    font-size: 11px;
+    line-height: 1.22;
+    max-width: calc(100% - 32px);
+  }
+
+  .note-object {
+    left: 16px;
+    top: 64px;
+  }
+
+  .note-horizon {
+    display: none;
+  }
+
+  .note-refraction {
+    bottom: 16px;
+    left: 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .control-region {
+    padding: 18px 20px;
+  }
+
+  .field {
+    grid-template-columns: minmax(120px, 1fr) minmax(120px, 150px);
+  }
+
+  .field b {
+    grid-column: 2;
+  }
+
+  .field .field-slider {
+    grid-column: 2;
   }
 }

@@ -11,6 +11,8 @@ export interface CameraParams {
   camViewCenter: Vec3;
 }
 
+export type CameraAim = "input" | "globeHorizon" | "flatHorizon" | "flatEquator" | "between" | "eyeLevel";
+
 function add(a: Vec3, b: Vec3): Vec3 {
   return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 }
@@ -40,16 +42,9 @@ function norm(v: Vec3): Vec3 {
   return len === 0 ? [0, 0, 0] : [v[0] / len, v[1] / len, v[2] / len];
 }
 
-export function computeCamera(inputs: CurveInputs, outputs: CurveOutputs): CameraParams {
+export function computeCamera(inputs: CurveInputs, outputs: CurveOutputs, aim: CameraAim = "input"): CameraParams {
   const viewDistance = Math.hypot(outputs.horizonDistanceOnEyeLevel, outputs.horizonDropFromEyeLevel);
-  let viewAngle = 0;
-  if (inputs.viewcenterHorizon === 0) {
-    viewAngle = toRad(outputs.horizonDropAngleDeg);
-  } else if (inputs.viewcenterHorizon === 1) {
-    viewAngle = Math.atan(inputs.height / inputs.equatorRadiusFE);
-  } else if (inputs.viewcenterHorizon === 2) {
-    viewAngle = (Math.atan(inputs.height / inputs.equatorRadiusFE) + toRad(outputs.horizonDropAngleDeg)) / 2;
-  }
+  let viewAngle = baseViewAngle(inputs, outputs, aim);
   viewAngle -= toRad(inputs.tilt);
   viewAngle = Math.max(-0.9999 * Math.PI / 2, Math.min(0.9999 * Math.PI / 2, viewAngle));
 
@@ -72,6 +67,23 @@ export function computeCamera(inputs: CurveInputs, outputs: CurveOutputs): Camer
     camUp: norm(up),
     camViewCenter,
   };
+}
+
+function baseViewAngle(inputs: CurveInputs, outputs: CurveOutputs, aim: CameraAim): number {
+  const globeHorizonAngle = toRad(outputs.horizonDropAngleDeg);
+  const flatEquatorAngle = Math.atan(Math.max(0.001, inputs.height) / Math.max(1, inputs.equatorRadiusFE));
+  const flatHorizonAngle = Math.atan(Math.max(0.001, inputs.height) / Math.max(1, flatHorizonDistance(outputs)));
+
+  if (aim === "globeHorizon") return globeHorizonAngle;
+  if (aim === "flatHorizon") return flatHorizonAngle;
+  if (aim === "flatEquator") return flatEquatorAngle;
+  if (aim === "between") return (flatEquatorAngle + globeHorizonAngle) / 2;
+  if (aim === "eyeLevel") return 0;
+
+  if (inputs.viewcenterHorizon === 0) return globeHorizonAngle;
+  if (inputs.viewcenterHorizon === 1) return flatEquatorAngle;
+  if (inputs.viewcenterHorizon === 2) return (flatEquatorAngle + globeHorizonAngle) / 2;
+  return 0;
 }
 
 export class JsgLikeCamera {
@@ -116,6 +128,10 @@ export function worldPointOnEarth(outputs: CurveOutputs, observerHeight: number,
 
 export function worldPointOnPlane(distance: number, side = 0, altitude = 0, observerHeight = 0): Vec3 {
   return [side, distance, altitude - observerHeight];
+}
+
+export function flatHorizonDistance(outputs: CurveOutputs): number {
+  return outputs.horizonDistanceOnEyeLevel;
 }
 
 export function screenMapper(width: number, height: number, rect?: { x: number; y: number; width: number; height: number }) {

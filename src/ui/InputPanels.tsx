@@ -6,6 +6,7 @@ import { useCurveStore } from "../state/curveStore";
 export function InputPanels() {
   const inputs = useCurveStore((state) => state.inputs);
   const updateInput = useCurveStore((state) => state.updateInput);
+  const updateInputs = useCurveStore((state) => state.updateInputs);
   const updateArrayInput = useCurveStore((state) => state.updateArrayInput);
   const reset = useCurveStore((state) => state.reset);
 
@@ -30,7 +31,7 @@ export function InputPanels() {
           <button type="button" onClick={() => updateInput("refractionSync", 2)}>
             Std Refraction
           </button>
-          <button type="button" onClick={() => updateInput("refractionCoeff", 0)}>
+          <button type="button" onClick={() => updateInputs({ refractionSync: 0, refractionCoeff: 0 })}>
             Zero Refraction
           </button>
           <button type="button" onClick={reset}>
