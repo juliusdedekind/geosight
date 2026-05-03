@@ -1,7 +1,6 @@
-# GeoSight: Earth Curvature and Horizon Simulator
-
 <img width="3811" height="1901" alt="image" src="https://github.com/user-attachments/assets/89125dc3-bb4d-45fd-9c3f-ed34e2b3dd14" />
 
+# GeoSight: Earth Curvature and Horizon Simulator
 
 GeoSight is a local web application for exploring earth curvature, horizon distance, target visibility, hidden height, apparent drop, and atmospheric refraction. The goal is to make the geometry inspectable: numbers, controls, and visualization should update together so a user can compare globe, flat-earth, and combined views without relying on a black-box calculator.
 
