@@ -1,6 +1,6 @@
 import { standardAtmosphere } from "./atmosphere";
 import { objectVector, PI90, sub, toDeg, toRad, vectorAngle } from "./math";
-import type { AngleFormat, UnitsType } from "./units";
+import type { AngleFormat, NumberFormat, UnitsType } from "./units";
 
 export type ShowModel = 1 | 2 | 3 | 4;
 export type RefractionSync = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -39,6 +39,7 @@ export interface CurveInputs {
   showLeftRightDrop: boolean;
   unitsType: UnitsType;
   angleFormat: AngleFormat;
+  numberFormat: NumberFormat;
   tilt: number;
   pan: number;
 }
@@ -118,6 +119,7 @@ export const defaultInputs: CurveInputs = {
   showLeftRightDrop: false,
   unitsType: 0,
   angleFormat: 0,
+  numberFormat: 0,
   tilt: 0,
   pan: 0,
 };

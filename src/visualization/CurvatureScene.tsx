@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { type CurveInputs, type CurveOutputs } from "../core/curvatureModel";
+import { getObjectSizeVar, type CurveInputs, type CurveOutputs } from "../core/curvatureModel";
 import { formatAngle, formatHeight, formatLength, formatNumber } from "../core/units";
 import { useCurveStore } from "../state/curveStore";
 import { computeCamera, flatHorizonDistance, JsgLikeCamera, screenMapper, worldPointOnEarth, worldPointOnPlane, type Vec2, type Vec3 } from "./jsgProjection";
@@ -322,8 +322,6 @@ function drawProjectedTargets(
   viewport: ViewportRect,
   kind: "globe" | "flat",
 ) {
-  const maxVisualHeight = Math.max(22, Math.min(130, viewport.width * 0.07));
-
   ([0, 1] as const).forEach((targetIndex) => {
     const count = Math.max(0, Math.min(500, Math.round(inputs.objectCounts[targetIndex])));
     if (count === 0) return;
@@ -331,40 +329,115 @@ function drawProjectedTargets(
     for (let n = count - 1; n >= 0; n -= skip) {
       const distance = inputs.objectSurfaceDistances[targetIndex] + n * inputs.objectDeltaDistances[targetIndex];
       const side = sideOffset(inputs, targetIndex, n, count);
+      const objectSize = inputs.objectSizes[targetIndex];
+      const targetHeight = getObjectSizeVar(inputs, targetIndex) * inputs.objectSizes[targetIndex];
       const base =
         kind === "flat" ? project(worldPointOnPlane(distance, side, 0, inputs.height)) : project(worldPointOnEarth(outputs, inputs.height, distance, side, 0));
       const top =
         kind === "flat"
-          ? project(worldPointOnPlane(distance, side, inputs.objectSizes[targetIndex], inputs.height))
-          : project(worldPointOnEarth(outputs, inputs.height, distance, side, inputs.objectSizes[targetIndex]));
+          ? project(worldPointOnPlane(distance, side, targetHeight, inputs.height))
+          : project(worldPointOnEarth(outputs, inputs.height, distance, side, targetHeight));
       if (!base || !top) continue;
       if (base[0] < viewport.x - 20 || base[0] > viewport.x + viewport.width + 20 || base[1] < viewport.y - 80 || base[1] > viewport.y + viewport.height + 100) continue;
-      const projectedSize = Math.hypot(top[0] - base[0], top[1] - base[1]);
-      const size = Math.max(14, Math.min(maxVisualHeight, projectedSize * 1.9));
-      const hidden = Math.min(size, (hiddenAtDistance(distance, inputs, outputs, targetIndex) / Math.max(1, inputs.objectSizes[targetIndex])) * size);
       if (inputs.targetTypes[targetIndex] === 1) {
+        const projectedSize = Math.hypot(top[0] - base[0], top[1] - base[1]);
+        const size = Math.max(8, projectedSize);
         drawMountain(ctx, base[0], base[1], size, targetIndex);
       } else {
-        drawRod(ctx, base[0], base[1], size, hidden);
+        const hidden = hiddenAtDistance(distance, outputs, targetHeight);
+        drawProjectedRod(ctx, inputs, outputs, project, kind, distance, side, objectSize, targetHeight, hidden);
       }
     }
   });
 }
 
-function drawRod(ctx: CanvasRenderingContext2D, x: number, groundY: number, size: number, hidden: number) {
-  const rodWidth = 9;
+function drawProjectedRod(
+  ctx: CanvasRenderingContext2D,
+  inputs: CurveInputs,
+  outputs: CurveOutputs,
+  project: (point: Vec3) => Vec2 | null,
+  kind: "globe" | "flat",
+  distance: number,
+  side: number,
+  objectSize: number,
+  targetHeight: number,
+  hidden: number,
+) {
+  const sizeVar = targetHeight / Math.max(0.001, objectSize);
+  const point = (xUnits: number, zUnits: number) => {
+    const lateral = side + xUnits * objectSize;
+    const altitude = zUnits * objectSize;
+    return kind === "flat"
+      ? project(worldPointOnPlane(distance, lateral, altitude, inputs.height))
+      : project(worldPointOnEarth(outputs, inputs.height, distance, lateral, altitude));
+  };
+
   ctx.save();
-  ctx.fillStyle = "#facc15";
-  ctx.fillRect(x - rodWidth / 2, groundY - size, rodWidth, size);
+  fillProjectedRect(ctx, point, -0.1, 0, 0.1, sizeVar, "#facc15");
+
   ctx.fillStyle = "#ef4444";
-  for (let y = groundY - size + 14; y < groundY - 3; y += 28) {
-    ctx.fillRect(x - rodWidth / 2, y, rodWidth, 10);
+  for (let z = 0.5; z < sizeVar; z += 1) {
+    fillProjectedRect(ctx, point, -0.1, z, 0, Math.min(z + 0.5, sizeVar), "#ef4444");
   }
+  for (let z = 0.1; z < sizeVar; z += 0.2) {
+    fillProjectedRect(ctx, point, 0, z, 0.1, Math.min(z + 0.1, sizeVar), "#ef4444");
+  }
+
   if (hidden > 0) {
-    ctx.fillStyle = "rgba(249, 115, 22, 0.9)";
-    ctx.fillRect(x - rodWidth / 2 - 1, groundY - hidden, rodWidth + 2, hidden);
+    fillProjectedRect(ctx, point, -0.11, 0, 0.11, Math.min(sizeVar, hidden / Math.max(0.001, objectSize)), "rgba(249, 115, 22, 0.88)");
   }
+
+  strokeProjectedRect(ctx, point, -0.1, 0, 0.1, sizeVar, "#111827");
   ctx.restore();
+}
+
+function fillProjectedRect(
+  ctx: CanvasRenderingContext2D,
+  point: (xUnits: number, zUnits: number) => Vec2 | null,
+  x1: number,
+  z1: number,
+  x2: number,
+  z2: number,
+  fillStyle: string,
+) {
+  const p1 = point(x1, z1);
+  const p2 = point(x2, z1);
+  const p3 = point(x2, z2);
+  const p4 = point(x1, z2);
+  if (!p1 || !p2 || !p3 || !p4) return;
+  ctx.fillStyle = fillStyle;
+  ctx.beginPath();
+  ctx.moveTo(p1[0], p1[1]);
+  ctx.lineTo(p2[0], p2[1]);
+  ctx.lineTo(p3[0], p3[1]);
+  ctx.lineTo(p4[0], p4[1]);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function strokeProjectedRect(
+  ctx: CanvasRenderingContext2D,
+  point: (xUnits: number, zUnits: number) => Vec2 | null,
+  x1: number,
+  z1: number,
+  x2: number,
+  z2: number,
+  strokeStyle: string,
+) {
+  const p1 = point(x1, z1);
+  const p2 = point(x2, z1);
+  const p3 = point(x2, z2);
+  const p4 = point(x1, z2);
+  if (!p1 || !p2 || !p3 || !p4) return;
+  ctx.strokeStyle = strokeStyle;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(p1[0], p1[1]);
+  ctx.lineTo(p2[0], p2[1]);
+  ctx.lineTo(p3[0], p3[1]);
+  ctx.lineTo(p4[0], p4[1]);
+  ctx.closePath();
+  ctx.stroke();
 }
 
 function drawMountain(ctx: CanvasRenderingContext2D, x: number, groundY: number, size: number, targetIndex: number) {
@@ -412,13 +485,13 @@ function drawTriangle(ctx: CanvasRenderingContext2D, x: number, y: number, w: nu
   ctx.stroke();
 }
 
-function hiddenAtDistance(dist: number, inputs: CurveInputs, outputs: CurveOutputs, targetIndex: 0 | 1) {
+function hiddenAtDistance(dist: number, outputs: CurveOutputs, targetHeight: number) {
   const angle = Math.abs(dist) / outputs.refractedRadiusEarth;
   const horizonAngle = (outputs.horizonDropAngleDeg * Math.PI) / 180;
   if (angle <= horizonAngle) return 0;
   const cosa = Math.cos(angle - horizonAngle);
   const hidden = (outputs.refractedRadiusEarth * (1 - cosa)) / cosa;
-  return Math.min(inputs.objectSizes[targetIndex], Math.max(0, hidden));
+  return Math.min(targetHeight, Math.max(0, hidden));
 }
 
 function drawPolyline(ctx: CanvasRenderingContext2D, points: Vec2[]) {

@@ -7,7 +7,7 @@ import type {
   ShowModel,
   VariationType,
 } from "../core/curvatureModel";
-import { gradientUnits, heightUnits, lengthUnits, type AngleFormat, type UnitsType } from "../core/units";
+import { gradientUnits, heightUnits, lengthUnits, type AngleFormat, type NumberFormat, type UnitsType } from "../core/units";
 import { useCurveStore } from "../state/curveStore";
 
 const diagonal35mmEquivalent = 43.2666153;
@@ -15,6 +15,7 @@ const diagonal35mmEquivalent = 43.2666153;
 type ControlPanelRuntime = {
   NewPanel: (params: Record<string, unknown>) => CpPanel;
   NewSliderPanel: (params: Record<string, unknown>) => CpPanel;
+  Invalidate: (panelRefs?: unknown, updateGui?: boolean) => void;
   Update: (panelRefs?: unknown) => void;
   UpdateLayout: (panelRefs?: unknown) => void;
 };
@@ -81,6 +82,7 @@ interface GeoSightCpModel {
   ShowLeftRightDrop: boolean;
   UnitsType: UnitsType;
   AngleFormat: AngleFormat;
+  NumberFormat: NumberFormat;
   Tilt: number;
   TiltSlider: number;
   Pan: number;
@@ -93,9 +95,16 @@ interface GeoSightCpModel {
   GradientUnit: string;
 }
 
+type GeoSightCpPairKey = {
+  [Key in keyof GeoSightCpModel]: GeoSightCpModel[Key] extends [number, number] ? Key : never;
+}[keyof GeoSightCpModel];
+
 declare global {
   interface Window {
     ControlPanels?: ControlPanelRuntime;
+    NumFormatter?: {
+      SetLang: (lang: string) => void;
+    };
     CurveApp?: GeoSightCpModel;
     GeoSightReset?: () => void;
     GeoSightStdRefraction?: () => void;
@@ -154,6 +163,7 @@ export function ControlPanelControls() {
       syncingRef.current = true;
       try {
         syncCpModel(model, state.inputs, state.outputs);
+        controlPanels.Invalidate(panels);
         controlPanels.Update(panels);
         controlPanels.UpdateLayout(panels);
       } finally {
@@ -526,6 +536,17 @@ function createUnitsPanel(controlPanels: ControlPanelRuntime, onModelChange: (fi
         { Name: "DM", Value: 1 },
         { Name: "DMS", Value: 2 },
       ],
+    })
+    .AddRadiobuttonField({
+      Name: "NumberFormat",
+      Label: "Number Format",
+      ValueType: "int",
+      Items: [
+        { Name: "English", Value: 0, Text: "1,234.56" },
+        { Name: "German", Value: 1, Text: "1.234,56" },
+        { Name: "Swiss", Value: 2, Text: "1'234,56" },
+        { Name: "ISO", Value: 3, Text: "1 234,56" },
+      ],
     });
 }
 
@@ -557,21 +578,21 @@ function syncCpModel(model: GeoSightCpModel, inputs: CurveInputs, outputs: Curve
   model.ShowModel = inputs.showModel;
   model.DeviceRatio = inputs.deviceRatio;
   model.ViewcenterHorizon = inputs.viewcenterHorizon;
-  model.ObjType = [...inputs.targetTypes];
-  model.NObjects = [...inputs.objectCounts];
-  model.ObjSurfDist = [...inputs.objectSurfaceDistances];
-  model.ObjDeltaDist = [...inputs.objectDeltaDistances];
-  model.ObjSideType = [...inputs.objectSideTypes];
-  model.ObjSidePos = [...inputs.objectSidePositions];
-  model.ObjSideVar = [...inputs.objectSideVariations];
-  model.ObjSizeType = [...inputs.objectSizeTypes];
-  model.ObjSize = [...inputs.objectSizes];
-  model.ObjSizeVar = [...inputs.objectSizeVariations];
-  model.SliderObjSurfDistLog = pairMap(inputs.objectSurfaceDistances, signedDistanceToSlider);
-  model.SliderObjDeltaDistLog = pairMap(inputs.objectDeltaDistances, deltaDistanceToSlider);
-  model.SliderObjSidePosLog = pairMap(inputs.objectSidePositions, signedDistanceToSlider);
-  model.SliderObjSideVarLog = pairMap(inputs.objectSideVariations, sideVariationToSlider);
-  model.SliderObjSizeLog = pairMap(inputs.objectSizes, objectSizeToSlider);
+  syncPair(model, "ObjType", inputs.targetTypes);
+  syncPair(model, "NObjects", inputs.objectCounts);
+  syncPair(model, "ObjSurfDist", inputs.objectSurfaceDistances);
+  syncPair(model, "ObjDeltaDist", inputs.objectDeltaDistances);
+  syncPair(model, "ObjSideType", inputs.objectSideTypes);
+  syncPair(model, "ObjSidePos", inputs.objectSidePositions);
+  syncPair(model, "ObjSideVar", inputs.objectSideVariations);
+  syncPair(model, "ObjSizeType", inputs.objectSizeTypes);
+  syncPair(model, "ObjSize", inputs.objectSizes);
+  syncPair(model, "ObjSizeVar", inputs.objectSizeVariations);
+  syncPair(model, "SliderObjSurfDistLog", pairMap(inputs.objectSurfaceDistances, signedDistanceToSlider));
+  syncPair(model, "SliderObjDeltaDistLog", pairMap(inputs.objectDeltaDistances, deltaDistanceToSlider));
+  syncPair(model, "SliderObjSidePosLog", pairMap(inputs.objectSidePositions, signedDistanceToSlider));
+  syncPair(model, "SliderObjSideVarLog", pairMap(inputs.objectSideVariations, sideVariationToSlider));
+  syncPair(model, "SliderObjSizeLog", pairMap(inputs.objectSizes, objectSizeToSlider));
   model.RefractionCoeff = inputs.refractionCoeff;
   model.RefractionSlider = inputs.refractionCoeff;
   model.TemperatureGradient = inputs.temperatureGradient;
@@ -589,6 +610,8 @@ function syncCpModel(model: GeoSightCpModel, inputs: CurveInputs, outputs: Curve
   model.ShowLeftRightDrop = inputs.showLeftRightDrop;
   model.UnitsType = inputs.unitsType;
   model.AngleFormat = inputs.angleFormat;
+  model.NumberFormat = inputs.numberFormat;
+  setCpNumberFormat(inputs.numberFormat);
   model.Tilt = inputs.tilt;
   model.TiltSlider = tiltToSlider(inputs.tilt);
   model.Pan = inputs.pan;
@@ -639,6 +662,7 @@ function cpModelToInputs(model: GeoSightCpModel, valueRef: string): Partial<Curv
     showLeftRightDrop: model.ShowLeftRightDrop,
     unitsType: model.UnitsType,
     angleFormat: model.AngleFormat,
+    numberFormat: model.NumberFormat,
     tilt: model.Tilt,
     pan: model.Pan,
   };
@@ -760,6 +784,26 @@ function sliderToDeltaDistance(slider: number): number {
 
 function pairMap<T>(value: readonly [number, number], callback: (item: number) => T): [T, T] {
   return [callback(value[0]), callback(value[1])];
+}
+
+function setCpNumberFormat(numberFormat: NumberFormat): void {
+  const cpLangs = ["en", "de", "ch", "iso"] as const;
+  window.NumFormatter?.SetLang(cpLangs[numberFormat]);
+}
+
+function syncPair(
+  model: GeoSightCpModel,
+  key: GeoSightCpPairKey,
+  value: readonly [number, number],
+): void {
+  const pairModel = model as unknown as Record<GeoSightCpPairKey, [number, number] | undefined>;
+  const current = pairModel[key];
+  if (Array.isArray(current)) {
+    current[0] = value[0];
+    current[1] = value[1];
+  } else {
+    pairModel[key] = [value[0], value[1]];
+  }
 }
 
 function clamp(value: number, min: number, max: number): number {

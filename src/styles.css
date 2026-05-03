@@ -39,6 +39,7 @@ button:hover {
   display: grid;
   grid-template-columns: 1fr;
   min-height: 100vh;
+  --control-width: 560px;
 }
 
 .scene-region {
@@ -52,6 +53,10 @@ button:hover {
   height: auto;
   overflow: visible;
   padding: 18px 28px;
+}
+
+.control-resizer {
+  display: none;
 }
 
 .app-header {
@@ -350,7 +355,7 @@ textarea {
 
 @media (min-width: 1100px) {
   .app-shell {
-    grid-template-columns: minmax(0, 1fr) minmax(360px, 430px);
+    grid-template-columns: minmax(0, 1fr) 8px minmax(420px, var(--control-width));
     height: 100vh;
     min-height: 0;
   }
@@ -365,9 +370,32 @@ textarea {
   }
 
   .control-region {
-    border-left: 1px solid #d7dce5;
+    border-left: 0;
     height: 100vh;
     overflow: auto;
+  }
+
+  .control-resizer {
+    background:
+      linear-gradient(90deg, transparent 0 3px, #c8d0dd 3px 5px, transparent 5px 8px);
+    cursor: col-resize;
+    display: block;
+    height: 100vh;
+    position: relative;
+    touch-action: none;
+    z-index: 5;
+  }
+
+  .control-resizer::before {
+    content: "";
+    inset: 0 -5px;
+    position: absolute;
+  }
+
+  .control-resizer:hover,
+  .control-resizer:active {
+    background:
+      linear-gradient(90deg, transparent 0 2px, #3864a3 2px 6px, transparent 6px 8px);
   }
 }
 

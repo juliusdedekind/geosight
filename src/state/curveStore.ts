@@ -105,6 +105,7 @@ const enumKeys = {
   refractionSync: [0, 1, 2, 3, 4, 5, 6],
   unitsType: [0, 1, 2],
   angleFormat: [0, 1, 2],
+  numberFormat: [0, 1, 2, 3],
 } as const;
 
 function parseImportedInputs(json: string): ImportParseResult {

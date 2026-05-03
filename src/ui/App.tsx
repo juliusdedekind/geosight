@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useState, type CSSProperties, type PointerEvent } from "react";
 import { useCurveStore } from "../state/curveStore";
 import { CurvatureScene } from "../visualization/CurvatureScene";
 import { ControlPanelControls } from "./ControlPanelControls";
 import { DataPanels } from "./DataPanels";
+
+const defaultControlWidth = 560;
+const minControlWidth = 420;
+const maxControlWidth = 860;
+const controlWidthStorageKey = "geosight.controlWidth";
 
 export function App() {
   const exportState = useCurveStore((state) => state.exportState);
   const importState = useCurveStore((state) => state.importState);
   const [stateText, setStateText] = useState("");
   const [stateMessage, setStateMessage] = useState<{ ok: boolean; text: string } | null>(null);
+  const [controlWidth, setControlWidth] = useState(readStoredControlWidth);
 
   const exportCurrentState = () => {
     setStateText(exportState());
@@ -20,11 +26,45 @@ export function App() {
     setStateMessage({ ok: result.ok, text: result.message });
   };
 
+  const startResize = (event: PointerEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const pointerId = event.pointerId;
+    const startX = event.clientX;
+    const startWidth = controlWidth;
+    event.currentTarget.setPointerCapture(pointerId);
+
+    const resize = (moveEvent: globalThis.PointerEvent) => {
+      const nextWidth = clampControlWidth(startWidth - (moveEvent.clientX - startX));
+      setControlWidth(nextWidth);
+      window.localStorage.setItem(controlWidthStorageKey, String(nextWidth));
+    };
+
+    const stopResize = () => {
+      window.removeEventListener("pointermove", resize);
+      window.removeEventListener("pointerup", stopResize);
+      window.removeEventListener("pointercancel", stopResize);
+    };
+
+    window.addEventListener("pointermove", resize);
+    window.addEventListener("pointerup", stopResize);
+    window.addEventListener("pointercancel", stopResize);
+  };
+
   return (
-    <main className="app-shell">
+    <main className="app-shell" style={{ "--control-width": `${controlWidth}px` } as CSSProperties}>
       <section className="scene-region" aria-label="Visualization">
         <CurvatureScene />
       </section>
+      <div
+        className="control-resizer"
+        role="separator"
+        aria-label="Resize calculator controls"
+        aria-orientation="vertical"
+        aria-valuemin={minControlWidth}
+        aria-valuemax={maxControlWidth}
+        aria-valuenow={controlWidth}
+        onPointerDown={startResize}
+      />
       <aside className="control-region" aria-label="Calculator controls">
         <header className="app-header">
           <div>
@@ -74,4 +114,15 @@ export function App() {
       </aside>
     </main>
   );
+}
+
+function readStoredControlWidth(): number {
+  if (typeof window === "undefined") return defaultControlWidth;
+  const stored = Number(window.localStorage.getItem(controlWidthStorageKey));
+  if (!Number.isFinite(stored)) return defaultControlWidth;
+  return clampControlWidth(stored);
+}
+
+function clampControlWidth(value: number): number {
+  return Math.min(maxControlWidth, Math.max(minControlWidth, value));
 }
