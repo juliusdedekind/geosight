@@ -43,6 +43,8 @@ GeoSight's core math already matches the Bislin formula family for this case. Th
 
 The largest remaining gaps are not basic curvature math. They are parity fixtures, display precision, source-calculator control coverage, and projection rendering fidelity.
 
+Update, 2026-05-03: the source `ControlPanel` runtime has been vendored under `public/vendor/control-panel` and is now used by the React app through `src/ui/ControlPanelControls.tsx`. The old recommendation to expose camera aim, diagonal FOV, and show-data controls is partially addressed at the UI layer. Remaining work is to tighten parity details, especially field-specific display formatting and any source controls not yet represented in the CP adapter.
+
 ## Recommended Changes
 
 ### 1. Add Example 1 as a Golden Regression Fixture
@@ -74,6 +76,8 @@ The Bislin input panel exposes controls that GeoSight either stores internally o
 - Show data toggles for object, refraction, horizon, and left-right drop
 
 GeoSight should expose these directly so an example can be recreated without editing exported state JSON.
+
+Status: mostly implemented via the CP-backed control adapter. Keep this item open only for auditing parity against the full source calculator control list.
 
 ### 3. Tighten Output Formatting Parity
 

@@ -95,6 +95,68 @@ h2 {
   padding: 14px 0;
 }
 
+.cp-controls table.ControlPanel {
+  border-bottom: 1px solid #e3e7ee;
+  border-collapse: collapse;
+  color: #172033;
+  font-size: 13px;
+  margin: 0;
+  padding: 14px 0;
+}
+
+.cp-controls table.ControlPanel th {
+  background: transparent;
+  color: #111827;
+  font-size: 15px;
+  padding: 14px 0 8px;
+  text-align: left;
+}
+
+.cp-controls table.ControlPanel td {
+  padding: 4px 6px;
+}
+
+.cp-controls table.ControlPanel td.Label {
+  color: #374151;
+  font-weight: 600;
+  min-width: 116px;
+}
+
+.cp-controls table.ControlPanel input[type="text"] {
+  border: 1px solid #c7cfdb;
+  border-radius: 6px;
+  color: #111827;
+  min-height: 30px;
+}
+
+.cp-controls table.ControlPanel table.FieldGrid td.FieldCell {
+  border-radius: 6px;
+}
+
+.cp-controls div.Slider {
+  background: #eef2f7;
+  border-color: #c7cfdb;
+  border-radius: 999px;
+  height: 22px;
+}
+
+.cp-controls div.Slider .Handle {
+  border-radius: 999px;
+  height: 22px;
+  line-height: 20px;
+}
+
+.cp-controls .lbtn {
+  background: #111827;
+  border-radius: 5px;
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-left: 4px;
+  padding: 1px 6px;
+}
+
 .field {
   align-items: center;
   display: grid;

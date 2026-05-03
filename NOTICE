@@ -21,5 +21,13 @@ visualization. In particular, jsgx3d/src/x.js contains its own notice:
   Copyright (c) 2004 Michael Foster, Licensed LGPL (gnu.org)
   heavily edited (c) 2005-2016 Walter Bislin, walter.bislins.ch
 
+The application also vendors Walter Bislin's ControlPanel runtime under
+public/vendor/control-panel for calculator controls and field formatting.
+The upstream license notice says the scripts from ControlPanel_2017-10-08.zip
+may be used, modified, and freely redistributed when the author is credited:
+
+  Copyright Walter Bislin, walter.bislins.ch
+  Permanent URL: http://walter.bislins.ch/doku/ControlPanel
+
 Keep third-party copyright and license notices intact when redistributing this
 repository or derivative works.

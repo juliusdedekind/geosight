@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useCurveStore } from "../state/curveStore";
 import { CurvatureScene } from "../visualization/CurvatureScene";
+import { ControlPanelControls } from "./ControlPanelControls";
 import { DataPanels } from "./DataPanels";
-import { InputPanels } from "./InputPanels";
 
 export function App() {
   const exportState = useCurveStore((state) => state.exportState);
@@ -35,7 +35,7 @@ export function App() {
             Export State
           </button>
         </header>
-        <InputPanels />
+        <ControlPanelControls />
         <DataPanels />
         <section className="panel">
           <h2>Save / Restore</h2>
