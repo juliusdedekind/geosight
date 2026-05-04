@@ -464,7 +464,14 @@ function drawProjectedRod(
       : project(worldPointOnEarth(outputs, inputs.height, distance, lateral, altitude));
   };
 
+  const hiddenUnits = Math.min(sizeVar, Math.max(0, hidden / Math.max(0.001, objectSize)));
+  if (hiddenUnits >= sizeVar) return;
+
   ctx.save();
+  if (!clipProjectedRect(ctx, point, -0.1, hiddenUnits, 0.1, sizeVar)) {
+    ctx.restore();
+    return;
+  }
   fillProjectedRect(ctx, point, -0.1, 0, 0.1, sizeVar, "#facc15");
 
   ctx.fillStyle = "#ef4444";
@@ -474,12 +481,10 @@ function drawProjectedRod(
   for (let z = 0.1; z < sizeVar; z += 0.2) {
     fillProjectedRect(ctx, point, 0, z, 0.1, Math.min(z + 0.1, sizeVar), "#ef4444");
   }
+  ctx.restore();
 
-  if (hidden > 0) {
-    fillProjectedRect(ctx, point, -0.11, 0, 0.11, Math.min(sizeVar, hidden / Math.max(0.001, objectSize)), "rgba(249, 115, 22, 0.88)");
-  }
-
-  strokeProjectedRect(ctx, point, -0.1, 0, 0.1, sizeVar, "#111827");
+  ctx.save();
+  strokeProjectedRect(ctx, point, -0.1, hiddenUnits, 0.1, sizeVar, "#111827");
   ctx.restore();
 }
 
@@ -505,6 +510,29 @@ function fillProjectedRect(
   ctx.lineTo(p4[0], p4[1]);
   ctx.closePath();
   ctx.fill();
+}
+
+function clipProjectedRect(
+  ctx: CanvasRenderingContext2D,
+  point: (xUnits: number, zUnits: number) => Vec2 | null,
+  x1: number,
+  z1: number,
+  x2: number,
+  z2: number,
+): boolean {
+  const p1 = point(x1, z1);
+  const p2 = point(x2, z1);
+  const p3 = point(x2, z2);
+  const p4 = point(x1, z2);
+  if (!p1 || !p2 || !p3 || !p4) return false;
+  ctx.beginPath();
+  ctx.moveTo(p1[0], p1[1]);
+  ctx.lineTo(p2[0], p2[1]);
+  ctx.lineTo(p3[0], p3[1]);
+  ctx.lineTo(p4[0], p4[1]);
+  ctx.closePath();
+  ctx.clip();
+  return true;
 }
 
 function strokeProjectedRect(
