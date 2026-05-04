@@ -414,7 +414,7 @@ function drawProjectedTargets(
   viewport: ViewportRect,
   kind: "globe" | "flat",
 ) {
-  ([0, 1] as const).forEach((targetIndex) => {
+  targetDrawOrder(inputs).forEach((targetIndex) => {
     const count = Math.max(0, Math.min(500, Math.round(inputs.objectCounts[targetIndex])));
     if (count === 0) return;
     const skip = Math.max(1, Math.ceil(count / 80));
@@ -441,6 +441,10 @@ function drawProjectedTargets(
       }
     }
   });
+}
+
+function targetDrawOrder(inputs: CurveInputs): Array<0 | 1> {
+  return inputs.objectSurfaceDistances[0] > inputs.objectSurfaceDistances[1] ? [0, 1] : [1, 0];
 }
 
 function drawProjectedRod(
