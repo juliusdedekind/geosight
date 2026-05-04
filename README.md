@@ -1,4 +1,5 @@
-<img width="3811" height="1901" alt="image" src="https://github.com/user-attachments/assets/89125dc3-bb4d-45fd-9c3f-ed34e2b3dd14" />
+<img width="2770" height="1644" alt="image" src="https://github.com/user-attachments/assets/d6d33686-90f6-41b5-8a36-f965c6dbdf5d" />
+
 
 # GeoSight: Earth Curvature and Horizon Simulator
 
