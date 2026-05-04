@@ -44,9 +44,25 @@ export function CurvatureScene() {
 }
 
 function SceneAnnotations({ inputs, outputs }: { inputs: CurveInputs; outputs: CurveOutputs }) {
+  const flatOnly = inputs.showModel === 2;
+  const objectIndex = outputs.nearObjectIndex;
   return (
     <>
-      {inputs.showDataObject && (
+      {inputs.showDataObject && flatOnly && (
+        <div className="scene-note note-object">
+          <p className="highlight">
+            Target {objectIndex + 1} Visible = {formatHeight(inputs.objectSizes[objectIndex], inputs.unitsType)}; Hidden ={" "}
+            {formatHeight(0, inputs.unitsType)}
+          </p>
+          <p>
+            Size = {formatHeight(inputs.objectSizes[objectIndex], inputs.unitsType)}; Angular Size ={" "}
+            {formatAngle(outputs.objectSizeAngleDeg, inputs.angleFormat)}
+          </p>
+          <p>Top Angle = {formatAngle(outputs.objectTopAngleFlatDeg, inputs.angleFormat)}</p>
+        </div>
+      )}
+
+      {inputs.showDataObject && !flatOnly && (
         <div className="scene-note note-object">
           <p className="highlight">
             Target {outputs.nearObjectIndex + 1} Visible = {formatHeight(outputs.objectVisible, inputs.unitsType)}; Hidden ={" "}
@@ -67,7 +83,7 @@ function SceneAnnotations({ inputs, outputs }: { inputs: CurveInputs; outputs: C
         </div>
       )}
 
-      {inputs.showDataHorizon && (
+      {inputs.showDataHorizon && !flatOnly && (
         <div className="scene-note note-horizon">
           <p>Distance on Surface = {formatLength(outputs.horizonSurfaceDistance, inputs.unitsType)}</p>
           <p>Horizon Dip Angle = {formatAngle(outputs.horizonDropAngleDeg, inputs.angleFormat)}</p>
@@ -79,7 +95,7 @@ function SceneAnnotations({ inputs, outputs }: { inputs: CurveInputs; outputs: C
         </div>
       )}
 
-      {inputs.showLeftRightDrop && (
+      {inputs.showLeftRightDrop && !flatOnly && (
         <div className="scene-note note-left-right">
           <p>Left-Right Drop Angle = {formatAngle(outputs.leftRightDropAngleDeg, inputs.angleFormat)}</p>
           <p>Left-Right Width Angle = {formatAngle(outputs.leftRightWidthAngleDeg, inputs.angleFormat)}</p>
@@ -89,7 +105,7 @@ function SceneAnnotations({ inputs, outputs }: { inputs: CurveInputs; outputs: C
         </div>
       )}
 
-      {inputs.showDataRefraction && (
+      {inputs.showDataRefraction && !flatOnly && (
         <div className="scene-note note-refraction">
           <p className="highlight">Target Lift rel to Horizon = {formatHeight(outputs.objectLiftRelativeToHorizon, inputs.unitsType)}</p>
           <p>Target Lift Absolute = {formatHeight(outputs.objectLiftAbsolute, inputs.unitsType)}</p>
@@ -152,7 +168,7 @@ function drawModelPanel(
   ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
   ctx.clip();
 
-  const camera = new JsgLikeCamera(computeCamera(inputs, outputs, kind === "flat" ? "flatHorizon" : "input"));
+  const camera = new JsgLikeCamera(computeCamera(inputs, outputs, "input"));
   const map = screenMapper(viewport.width, viewport.height, viewport);
   const project = (point: Vec3) => {
     const projected = camera.project(point);
@@ -166,11 +182,10 @@ function drawModelPanel(
 
   if (kind === "flat" || kind === "both") {
     drawProjectedFlatGrid(ctx, inputs, outputs, project);
-    drawProjectedFlatProjection(ctx, inputs, outputs, project);
   }
 
   drawProjectedEyeLevel(ctx, outputs, project, viewport);
-  drawHorizonMarkers(ctx, viewport, projectedHorizonY(outputs, inputs.height, project, viewport.height, kind));
+  if (kind !== "flat") drawHorizonMarkers(ctx, viewport, projectedHorizonY(outputs, inputs.height, project, viewport.height, kind));
   drawProjectedTargets(ctx, inputs, outputs, project, viewport, kind === "flat" ? "flat" : "globe");
 
   if (viewport.x > 0 || kind !== "both") drawPanelLabel(ctx, viewport, kind === "flat" ? "Flat Earth" : kind === "globe" ? "Globe" : "");
@@ -194,26 +209,6 @@ function drawProjectedGrid(
   ctx.restore();
 }
 
-function drawProjectedFlatProjection(
-  ctx: CanvasRenderingContext2D,
-  inputs: CurveInputs,
-  outputs: CurveOutputs,
-  project: (point: Vec3) => Vec2 | null,
-) {
-  ctx.save();
-  ctx.strokeStyle = "rgba(220, 38, 38, 0.8)";
-  ctx.lineWidth = 1.5;
-  const horizonDistance = flatHorizonDistance(outputs);
-  const sideMax = horizonDistance * 0.9;
-  const points: Vec2[] = [];
-  for (let side = -sideMax; side <= sideMax; side += sideMax / 64) {
-    const point = project(worldPointOnPlane(horizonDistance, side, 0, inputs.height));
-    if (point) points.push(point);
-  }
-  drawPolyline(ctx, points);
-  ctx.restore();
-}
-
 function drawProjectedFlatGrid(
   ctx: CanvasRenderingContext2D,
   inputs: CurveInputs,
@@ -221,12 +216,81 @@ function drawProjectedFlatGrid(
   project: (point: Vec3) => Vec2 | null,
 ) {
   ctx.save();
-  ctx.strokeStyle = "rgba(86, 95, 255, 0.34)";
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.55)";
   ctx.lineWidth = 1;
 
-  drawBislinAngularGrid(ctx, outputs, project, (lat, long) => worldPointOnBislinPlane(outputs, inputs.height, lat, long));
+  drawFlatEarthCircles(ctx, inputs, project);
+  drawFlatEarthRays(ctx, inputs, project);
 
   ctx.restore();
+}
+
+function drawFlatEarthCircles(ctx: CanvasRenderingContext2D, inputs: CurveInputs, project: (point: Vec3) => Vec2 | null) {
+  ctx.save();
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.85)";
+  ctx.lineWidth = 1;
+  drawPlaneCircle(ctx, project, inputs.equatorRadiusFE, inputs.height);
+  ctx.lineWidth = 2;
+  drawPlaneCircle(ctx, project, 2 * inputs.equatorRadiusFE, inputs.height);
+  ctx.restore();
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.55)";
+  ctx.lineWidth = 1;
+  let circleDelta = inputs.equatorRadiusFE / 12;
+  drawCircleRange(ctx, project, inputs.height, circleDelta, 2 * inputs.equatorRadiusFE - circleDelta / 2);
+  if (inputs.height < 700000) {
+    let circleMax = circleDelta;
+    circleDelta /= 10;
+    drawCircleRange(ctx, project, inputs.height, circleDelta, circleMax - circleDelta / 2);
+  }
+  if (inputs.height < 30000) {
+    let circleMax = circleDelta;
+    circleDelta /= 10;
+    drawCircleRange(ctx, project, inputs.height, circleDelta, circleMax - circleDelta / 2);
+  }
+  if (inputs.height < 3000) {
+    let circleMax = circleDelta;
+    circleDelta /= 10;
+    drawCircleRange(ctx, project, inputs.height, circleDelta, circleMax - circleDelta / 2);
+  }
+  if (inputs.height < 300) {
+    let circleMax = circleDelta;
+    circleDelta /= 10;
+    drawCircleRange(ctx, project, inputs.height, circleDelta, circleMax - circleDelta / 2);
+  }
+  ctx.restore();
+}
+
+function drawCircleRange(ctx: CanvasRenderingContext2D, project: (point: Vec3) => Vec2 | null, observerHeight: number, delta: number, max: number) {
+  for (let radius = delta; radius < max; radius += delta) {
+    drawPlaneCircle(ctx, project, radius, observerHeight);
+  }
+}
+
+function drawFlatEarthRays(ctx: CanvasRenderingContext2D, inputs: CurveInputs, project: (point: Vec3) => Vec2 | null) {
+  const angleDelta = Math.PI / 12;
+  const angleMax = 2 * Math.PI - angleDelta / 2;
+  const radius = 2 * inputs.equatorRadiusFE;
+  for (let angle = 0; angle < angleMax; angle += angleDelta) {
+    drawProjectedSegment(ctx, project([radius * Math.cos(angle), radius * Math.sin(angle), -inputs.height]), project([0, 0, -inputs.height]));
+  }
+}
+
+function drawPlaneCircle(ctx: CanvasRenderingContext2D, project: (point: Vec3) => Vec2 | null, radius: number, observerHeight: number) {
+  const steps = 240;
+  let points: Vec2[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const angle = (i / steps) * Math.PI * 2;
+    const point = project([radius * Math.cos(angle), radius * Math.sin(angle), -observerHeight]);
+    if (point) {
+      points.push(point);
+    } else if (points.length > 0) {
+      drawPolyline(ctx, points);
+      points = [];
+    }
+  }
+  drawPolyline(ctx, points);
 }
 
 function drawBislinAngularGrid(
@@ -275,14 +339,6 @@ function drawBislinAngularGrid(
     if (endPoint) points.push(endPoint);
     drawPolyline(ctx, points);
   }
-}
-
-function worldPointOnBislinPlane(outputs: CurveOutputs, observerHeight: number, lat: number, long: number): Vec3 {
-  const radius = outputs.refractedRadiusEarth;
-  const x = radius * Math.sin(long);
-  const rr = radius * Math.cos(long);
-  const y = rr * Math.sin(lat);
-  return [x, y, -observerHeight];
 }
 
 function acosClamped(value: number): number {
@@ -380,7 +436,7 @@ function drawProjectedTargets(
         const size = Math.max(8, projectedSize);
         drawMountain(ctx, base[0], base[1], size, targetIndex);
       } else {
-        const hidden = hiddenAtDistance(distance, outputs, targetHeight);
+        const hidden = kind === "flat" ? 0 : hiddenAtDistance(distance, outputs, targetHeight);
         drawProjectedRod(ctx, inputs, outputs, project, kind, distance, side, objectSize, targetHeight, hidden);
       }
     }
@@ -546,6 +602,14 @@ function drawPolyline(ctx: CanvasRenderingContext2D, points: Vec2[]) {
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
   for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+  ctx.stroke();
+}
+
+function drawProjectedSegment(ctx: CanvasRenderingContext2D, start: Vec2 | null, end: Vec2 | null) {
+  if (!start || !end) return;
+  ctx.beginPath();
+  ctx.moveTo(start[0], start[1]);
+  ctx.lineTo(end[0], end[1]);
   ctx.stroke();
 }
 
