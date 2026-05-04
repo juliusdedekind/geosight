@@ -116,7 +116,7 @@ export const defaultInputs: CurveInputs = {
   showDataObject: true,
   showDataRefraction: true,
   showDataHorizon: true,
-  showLeftRightDrop: false,
+  showLeftRightDrop: true,
   unitsType: 0,
   angleFormat: 0,
   numberFormat: 0,

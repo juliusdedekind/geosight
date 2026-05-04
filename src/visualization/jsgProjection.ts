@@ -11,7 +11,15 @@ export interface CameraParams {
   camViewCenter: Vec3;
 }
 
+export interface Rect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export type CameraAim = "input" | "globeHorizon" | "flatHorizon" | "flatEquator" | "between" | "eyeLevel";
+export const cameraViewportRatio = 3 / 2;
 
 function add(a: Vec3, b: Vec3): Vec3 {
   return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
@@ -59,8 +67,7 @@ export function computeCamera(inputs: CurveInputs, outputs: CurveOutputs, aim: C
   const normal = cross(horizontal, [0, 0, 1]);
   const up = cross(normal, viewCenterNorm);
 
-  const vpRatio = 3 / 2;
-  const sceneSize = inputs.deviceRatio > vpRatio ? outputs.sceneWidth / vpRatio : outputs.sceneHeight;
+  const sceneSize = inputs.deviceRatio > cameraViewportRatio ? outputs.sceneWidth / cameraViewportRatio : outputs.sceneHeight;
   return {
     sceneSize: Math.max(1, sceneSize),
     camPos: [0, 0, 0],
@@ -138,6 +145,28 @@ export function screenMapper(width: number, height: number, rect?: { x: number; 
   const viewport = rect ?? { x: 0, y: 0, width, height };
   const scale = Math.min(viewport.width, viewport.height) * 0.82;
   return ([x, y]: Vec2): Vec2 => [viewport.x + viewport.width / 2 + x * scale, viewport.y + viewport.height / 2 - y * scale];
+}
+
+export function fitAspectRect(container: Rect, aspectRatio: number): Rect {
+  const safeAspect = Math.max(0.001, aspectRatio);
+  const containerAspect = container.width / Math.max(1, container.height);
+  if (containerAspect > safeAspect) {
+    const width = container.height * safeAspect;
+    return {
+      x: container.x + (container.width - width) / 2,
+      y: container.y,
+      width,
+      height: container.height,
+    };
+  }
+
+  const height = container.width / safeAspect;
+  return {
+    x: container.x,
+    y: container.y + (container.height - height) / 2,
+    width: container.width,
+    height,
+  };
 }
 
 export function rotateZ(point: Vec3, angleRad: number): Vec3 {

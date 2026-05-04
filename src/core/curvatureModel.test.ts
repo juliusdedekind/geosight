@@ -12,6 +12,10 @@ describe("computeCurve", () => {
     expect(result.refractionCoeff).toBe(0);
   });
 
+  it("shows left-right horizon drop data by default to match the original calculator", () => {
+    expect(defaultInputs.showLeftRightDrop).toBe(true);
+  });
+
   it("applies standard atmosphere refraction", () => {
     const result = computeCurve({ ...defaultInputs, refractionSync: 2 });
     expect(result.refractionCoeff).toBeGreaterThan(0.1);

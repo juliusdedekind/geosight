@@ -43,8 +43,12 @@ button:hover {
 }
 
 .scene-region {
+  align-items: center;
+  background: #eef2f7;
   border-bottom: 1px solid #d7dce5;
-  min-height: 68vh;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
 }
 
 .control-region {
@@ -258,16 +262,23 @@ textarea {
 }
 
 .scene-wrap {
-  height: 100%;
-  min-height: 68vh;
+  aspect-ratio: 3 / 2;
+  background: #ffffff;
+  border: 1px solid #cfd6e2;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.1);
+  flex: 0 1 auto;
+  max-width: 100%;
   overflow: hidden;
   position: relative;
+  width: 100%;
 }
 
 .scene-wrap canvas,
 .curve-canvas {
   display: block;
+  inset: 0;
   height: 100%;
+  position: absolute;
   width: 100%;
 }
 
@@ -362,10 +373,14 @@ textarea {
 
   .scene-region {
     border-bottom: 0;
+    height: 100vh;
     min-height: 0;
+    padding: 24px;
   }
 
   .scene-wrap {
+    max-height: calc(100vh - 48px);
+    max-width: calc(150vh - 72px);
     min-height: 0;
   }
 
@@ -406,7 +421,7 @@ textarea {
 
   .scene-region,
   .scene-wrap {
-    min-height: 58vh;
+    min-height: 0;
   }
 
   .scene-note {

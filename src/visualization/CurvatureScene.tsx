@@ -2,7 +2,18 @@ import { useEffect, useRef } from "react";
 import { getObjectSizeVar, type CurveInputs, type CurveOutputs } from "../core/curvatureModel";
 import { formatAngle, formatHeight, formatLength, formatNumber } from "../core/units";
 import { useCurveStore } from "../state/curveStore";
-import { computeCamera, flatHorizonDistance, JsgLikeCamera, screenMapper, worldPointOnEarth, worldPointOnPlane, type Vec2, type Vec3 } from "./jsgProjection";
+import {
+  cameraViewportRatio,
+  computeCamera,
+  fitAspectRect,
+  flatHorizonDistance,
+  JsgLikeCamera,
+  screenMapper,
+  worldPointOnEarth,
+  worldPointOnPlane,
+  type Vec2,
+  type Vec3,
+} from "./jsgProjection";
 
 export function CurvatureScene() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -122,6 +133,7 @@ function drawScene(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, inp
     drawModelPanel(ctx, inputs, outputs, { x: 0, y: 0, width, height }, inputs.showModel === 2 ? "flat" : inputs.showModel === 3 ? "both" : "globe");
   }
 
+  drawDeviceFrame(ctx, inputs, { x: 0, y: 0, width, height });
   drawTheodolite(ctx, inputs, width, height);
 }
 
@@ -175,28 +187,9 @@ function drawProjectedGrid(
   ctx.strokeStyle = "rgba(86, 95, 255, 0.45)";
   ctx.lineWidth = 1;
 
-  const distanceMax = Math.max(outputs.horizonSurfaceDistance * 1.35, ...inputs.objectSurfaceDistances) * 1.1;
-  const sideMax = Math.max(outputs.horizonDistanceOnEyeLevel * 0.75, distanceMax * 0.35);
-  const distanceStep = Math.max(outputs.gridSpacing, distanceMax / 18);
-  const sideStep = sideMax / 8;
-
-  for (let side = -sideMax; side <= sideMax + 1; side += sideStep) {
-    const points: Vec2[] = [];
-    for (let distance = 0; distance <= distanceMax; distance += distanceStep / 2) {
-      const point = project(worldPointOnEarth(outputs, inputs.height, distance, side, 0));
-      if (point) points.push(point);
-    }
-    drawPolyline(ctx, points);
-  }
-
-  for (let distance = distanceStep; distance <= distanceMax + 1; distance += distanceStep) {
-    const points: Vec2[] = [];
-    for (let side = -sideMax; side <= sideMax + 1; side += sideStep / 2) {
-      const point = project(worldPointOnEarth(outputs, inputs.height, distance, side, 0));
-      if (point) points.push(point);
-    }
-    drawPolyline(ctx, points);
-  }
+  drawBislinAngularGrid(ctx, outputs, project, (lat, long) =>
+    worldPointOnEarth(outputs, inputs.height, lat * outputs.refractedRadiusEarth, long * outputs.refractedRadiusEarth, 0),
+  );
 
   ctx.restore();
 }
@@ -230,27 +223,70 @@ function drawProjectedFlatGrid(
   ctx.save();
   ctx.strokeStyle = "rgba(86, 95, 255, 0.34)";
   ctx.lineWidth = 1;
-  const distanceMax = Math.max(outputs.horizonSurfaceDistance * 1.35, ...inputs.objectSurfaceDistances) * 1.1;
-  const sideMax = Math.max(outputs.horizonDistanceOnEyeLevel * 0.75, distanceMax * 0.35);
-  const distanceStep = Math.max(outputs.gridSpacing, distanceMax / 18);
-  const sideStep = sideMax / 8;
-  for (let side = -sideMax; side <= sideMax + 1; side += sideStep) {
-    const points: Vec2[] = [];
-    for (let distance = 0; distance <= distanceMax; distance += distanceStep / 2) {
-      const point = project(worldPointOnPlane(distance, side, 0, inputs.height));
-      if (point) points.push(point);
-    }
-    drawPolyline(ctx, points);
-  }
-  for (let distance = distanceStep; distance <= distanceMax + 1; distance += distanceStep) {
-    const points: Vec2[] = [];
-    for (let side = -sideMax; side <= sideMax + 1; side += sideStep / 2) {
-      const point = project(worldPointOnPlane(distance, side, 0, inputs.height));
-      if (point) points.push(point);
-    }
-    drawPolyline(ctx, points);
-  }
+
+  drawBislinAngularGrid(ctx, outputs, project, (lat, long) => worldPointOnBislinPlane(outputs, inputs.height, lat, long));
+
   ctx.restore();
+}
+
+function drawBislinAngularGrid(
+  ctx: CanvasRenderingContext2D,
+  outputs: CurveOutputs,
+  project: (point: Vec3) => Vec2 | null,
+  pointOnGrid: (lat: number, long: number) => Vec3,
+) {
+  const radius = outputs.refractedRadiusEarth;
+  const gridDeltaAngle = outputs.gridSpacing / radius;
+  const horizonAngle = outputs.horizonSurfaceDistance / radius;
+  if (!Number.isFinite(gridDeltaAngle) || gridDeltaAngle <= 0 || !Number.isFinite(horizonAngle) || horizonAngle <= 0) return;
+
+  const earthCenterToHorizonDisk = radius * Math.cos(horizonAngle);
+
+  const latMax = horizonAngle;
+  const latStart = -(Math.floor(latMax / gridDeltaAngle) * gridDeltaAngle);
+  for (let lat = latStart; lat < latMax; lat += gridDeltaAngle) {
+    const dLatPlaneDisk = earthCenterToHorizonDisk / Math.cos(lat);
+    const longMax = acosClamped(dLatPlaneDisk / radius);
+    const longStart = -(Math.floor(longMax / gridDeltaAngle) * gridDeltaAngle);
+    const points: Vec2[] = [];
+    for (let long = longStart; long < longMax; long += gridDeltaAngle) {
+      const point = project(pointOnGrid(lat, long));
+      if (point) points.push(point);
+    }
+    const endPoint = project(pointOnGrid(lat, longMax));
+    if (endPoint) points.push(endPoint);
+    drawPolyline(ctx, points);
+  }
+
+  const longMax = horizonAngle;
+  const longStart = -(Math.floor(longMax / gridDeltaAngle) * gridDeltaAngle);
+  for (let long = longStart; long < longMax; long += gridDeltaAngle) {
+    const rLong = radius * Math.cos(long);
+    const latMax = acosClamped(earthCenterToHorizonDisk / rLong);
+    const latStart = -(Math.floor(latMax / gridDeltaAngle) * gridDeltaAngle);
+    const points: Vec2[] = [];
+    const startPoint = project(pointOnGrid(-latMax, long));
+    if (startPoint) points.push(startPoint);
+    for (let lat = latStart; lat < latMax; lat += gridDeltaAngle) {
+      const point = project(pointOnGrid(lat, long));
+      if (point) points.push(point);
+    }
+    const endPoint = project(pointOnGrid(latMax, long));
+    if (endPoint) points.push(endPoint);
+    drawPolyline(ctx, points);
+  }
+}
+
+function worldPointOnBislinPlane(outputs: CurveOutputs, observerHeight: number, lat: number, long: number): Vec3 {
+  const radius = outputs.refractedRadiusEarth;
+  const x = radius * Math.sin(long);
+  const rr = radius * Math.cos(long);
+  const y = rr * Math.sin(lat);
+  return [x, y, -observerHeight];
+}
+
+function acosClamped(value: number): number {
+  return Math.acos(Math.min(1, Math.max(-1, value)));
 }
 
 function drawProjectedGlobeHorizon(
@@ -483,6 +519,17 @@ function drawTriangle(ctx: CanvasRenderingContext2D, x: number, y: number, w: nu
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
+}
+
+function drawDeviceFrame(ctx: CanvasRenderingContext2D, inputs: CurveInputs, viewport: ViewportRect) {
+  if (Math.abs(inputs.deviceRatio - cameraViewportRatio) < 0.0001) return;
+
+  const frame = fitAspectRect(viewport, inputs.deviceRatio);
+  ctx.save();
+  ctx.strokeStyle = "#111827";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(frame.x + 1, frame.y + 1, frame.width - 2, frame.height - 2);
+  ctx.restore();
 }
 
 function hiddenAtDistance(dist: number, outputs: CurveOutputs, targetHeight: number) {
